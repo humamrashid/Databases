@@ -1,5 +1,6 @@
 Humam Rashid
 CISC 7510X, Fall 2019.
+
 /* Question 1. */
 SELECT description FROM product WHERE productid=42;
 
@@ -20,12 +21,12 @@ GROUP BY purchase.quantity
 HAVING SUM(purchase.quantity) = 0;
 
 /* Question 6. */
-SELECT product.description from product INNER JOIN purchase
+SELECT product.description FROM product INNER JOIN purchase
 ON product.productid = purchase.productid
 GROUP BY purchase.quantity
 HAVING SUM(purchase.quantity) = 0;
 
 /* Question 7. */
-SELECT purchase.productid from purchase INNER JOIN customer
+SELECT purchase.productid FROM purchase INNER JOIN customer
 ON purchase.customerid = customer.customerid
 WHERE customer.zip = 10001;
