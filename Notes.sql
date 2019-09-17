@@ -1,20 +1,25 @@
 -- Notes on SQL, not actual SQL code!
 
--- SQL
+-- SQL (Structured Query Language). Industry and academic standard language for
+-- managing relational databses in a DBMS (Database Management System). SQL is
+-- NOT case-sensitive.
 
--- DDL (Data Definition Language).
+-- DDL (Data Definition Language). Primary operations include:
     create table;
     drop table;
--- DML (Data Manipulation Language).
--- Used to perform CRUD (Create, Retrieve, Update and Delete) operations which
--- all databases are expected to support.
-    insert
-    select
-    update
-    delete
 
--- Creating tables.
+-- DML (Data Manipulation Language). Primary operations include:
+    insert ...
+    select ...
+    update ...
+    delete ...
 
+-- DDL and DML used to perform CRUD (Create, Retrieve, Update and Delete)
+-- operations (which all databases are expected to support). Most DBMS support
+-- a wider variety of operations beyond this and many differences exist between
+-- the operations supported in each.
+
+-- Creating tables. Example:
 create table customer (
     custid bigint,
     name varchar(100),
@@ -26,33 +31,37 @@ create table customer (
     zip varchar(5)
 );
 
--- Inserting data.
+-- Inserting data. Example:
+insert int customer(custid, name, email)
+    values(1, 'John Doe', 'john.doe@gmail.com' ...);
+insert int customer(custid, name, email)
+    values(2, 'Jane Doe', 'jane.doe@gmail.com' ...);
 
+-- Entries in values must match up with columns the table (as specified when
+-- created).
 -- Inserts are relatively slow, requiring disk access before the database can be
--- updated. When adding multiple data units, use database utilities specific to
--- the DBMS you're using.
-insert int customer(custid, name, email)
-    values(1, 'John Doe', 'john.doe@gmail.com');
-insert int customer(custid, name, email)
-    values(2, 'Jane Doe', 'jane.doe@gmail.com');
+-- updated. When adding multiple data units, prefer to use database utilities
+-- specific to the DBMS you're using.
 
--- Be careful when updating data, don't use if not sure, prefer adding new
--- address.
+-- Updating Data. Example:
 update customer set dob='2001-01-01' where custid=1;
 update customer set zip='10001' where custid=1;
+-- Be careful when updating data, don't use if not certain, prefer adding new
+-- entry with the modified details.
 
--- Be careful when deleting data, don't use if not sure.
+-- Deleting data:
 delete from customer where custid=2;
+-- Be careful when deleting data, don't use if not certain.
 
--- Don't treat customer data as a state, rather consider it as a series of
--- transactions.
+-- KEY IDEA (for insertion/deletion): Don't treat data as a state, rather
+-- consider it as a series of transactions.
 
--- Querying data.
+-- Querying data. Probably the most common and important task performed in using
+-- a databse.
 
 -- Select statements.
 
 -- Getting everything/everyone:
-
 select * from customer;
 
 -- Getting a single customer:
