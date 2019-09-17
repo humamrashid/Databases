@@ -36,7 +36,6 @@ insert int customer(custid, name, email)
     values(1, 'John Doe', 'john.doe@gmail.com' ...);
 insert int customer(custid, name, email)
     values(2, 'Jane Doe', 'jane.doe@gmail.com' ...);
-
 -- Entries in values must match up with columns the table (as specified when
 -- created).
 -- Inserts are relatively slow, requiring disk access before the database can be
@@ -49,7 +48,7 @@ update customer set zip='10001' where custid=1;
 -- Be careful when updating data, don't use if not certain, prefer adding new
 -- entry with the modified details.
 
--- Deleting data:
+-- Deleting data. Example:
 delete from customer where custid=2;
 -- Be careful when deleting data, don't use if not certain.
 
@@ -57,47 +56,36 @@ delete from customer where custid=2;
 -- consider it as a series of transactions.
 
 -- Querying data. Probably the most common and important task performed in using
--- a databse.
-
--- Select statements.
-
+-- a databse. Uses the 'SELECT' keyword.
+-- Select statements. Examples:
 -- Getting everything/everyone:
 select * from customer;
-
 -- Getting a single customer:
 select * from customer where custid=2;
-
 -- Get customers name 'Doe'.
-select * from customer where name line '%Doe';
-
+select * from customer where name like '%Doe';
 -- Get count of customers.
 select count(*) from customer;
-
 -- Get count of customers named 'Doe'.
 select count(*) from customer where name like '%Doe';
-
--- Get count of customers by state
+-- Get count of customers by state and in descending order:
 select state, count(*)
 from customer
 group by state
 order by desc;
-
 -- Get percentage of customers in NY.
 select 100 * sum(case when state='NY' then 1.0 else 0.0 end) / sum(1.0)
-from customer
-
+from customer;
 -- Create age group label.
 select a.*,
     case when dob >='2001-01-01' then 'TEEN'
          when dob >='1970-01-01' then 'MID'
-         when dob >= '1950-01-01' then 'ELD'
-        else 'SNR'
+         when dob >='1950-01-01' then 'ELD'
+         else 'SNR'
     end as a egegrp
 from customer a;
-
 -- Count customers by age group.
 -- Using CTEs: Common Table Expressions.
-
 with agestmt as (
     select a.*,
         case when dob >='2001-01-01' then 'TEEN'
@@ -111,12 +99,9 @@ select agegrp, count(*)
 from agestmt
 group by agegrp
 order by 2 desc;
-
 -- Everything starting with 'with' to 'order by...' above is a single select
 -- statement.
-
--- Creating tables from data.
-
+-- Creating tables from queries and querying after.
 create table cust_agegrp as
     select a.*,
         case when dob >='2001-01-01' then 'TEEN'
@@ -125,11 +110,8 @@ create table cust_agegrp as
             else 'SNR'
         end as a egegrp
 from customer a;
-
 select * from cust_agegrp where agegrp='TEEN';
-
--- Creating views from queries.
-
+-- Creating views from queries and querying after.
 create table cust_agegrp as
     select a.*,
         case when dob >='2001-01-01' then 'TEEN'
@@ -138,23 +120,20 @@ create table cust_agegrp as
             else 'SNR'
         end as a egegrp
 from customer a;
-
 select * from cust_agegrp where agegrp='TEEN';
-
+-- Count customers by age group from the created table.
 select agegrp, count(*)
 from cust_agegrp
 group by agegrp
 order by desc;
 
--- Joins.
-
--- Example, tables for what your purchased.
+-- Joins. Very important operation for comparing/matching data between tables.
+-- Example tables for representation of purchases.
 create table purchase (
     purchaseid bigint,
     custid bigint,
     tim timestamp
 );
-
 create table purchase_detail (
     detailid bigint,
     purchaseid bigint,
@@ -162,10 +141,8 @@ create table purchase_detail (
     qty int,
     price numeric(18, 8)
 );
-
--- Get all purchases for custid=1;
+-- Get all purchases for custid=1.
 select * from purchase where custid=1;
-
 -- Get all purchases for customers in zip 10001.
 select a.*
 from purchase a
