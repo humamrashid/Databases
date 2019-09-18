@@ -169,7 +169,7 @@ group by state
 order by 2 desc;
 -- How many of each product did 'John Doe' who lives in 'NY' purchase?
 select productid, sum(c.qty)
-from customer
+from customer a
     inner join purchase b
     on a.custid=b.custid
     inner join purchase_detail c
@@ -181,8 +181,8 @@ order by 2 desc;
 -- This type of join can be dangerous, use with caution.
 select productid, sum(c.qty)
 from customer
-    natural inner join purchase b --custid is join column
-    natural inner join purchase_detail c -- purchaseid
+    natural inner join purchase b
+    natural inner join purchase_detail c
 where a.name='John Doe' and a.state='NY'
 group by productid
 order by 2 desc;
@@ -215,7 +215,7 @@ select ... from tableA right outer join tableB on ...
 select custid, purchaseid
 from customer a
     full outer join purchaes b
-    on a.custid=b.custid
+    on a.custid=b.custid;
 -- Example output:
 1, 2135
 1, 2324
