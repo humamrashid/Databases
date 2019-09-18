@@ -143,32 +143,27 @@ create table purchase_detail (
 );
 -- Get all purchases for custid=1.
 select * from purchase where custid=1;
--- Get all purchases for customers in zip 10001.
+-- Get all purchases for customers in zip '10001'.
 select a.*
 from purchase a
     inner join customer b
     on a.custid=b.custid
 where zip='10001';
-
--- customer.custid is 'primary' key.
--- purchase.custid is 'foreign' key.
-
--- Count number of purchases by customers in zip 10001.
-
+-- customer.custid is called 'primary' key.
+-- purchase.custid is called 'foreign' key.
+-- Count number of purchases by customers in zip '10001'.
 select count(*)
 from purchase a
     inner join customer b
     on a.custid=b.custid
 where zip='10001';
-
 -- purchase counts by state
 select count(*)
     inner join purchase b
     on a.custid=b.custid
 group by state
 order by 2 desc;
-
--- How many of each product did 'John Doe' who lives in NY purchase?
+-- How many of each product did 'John Doe' who lives in 'NY' purchase?
 select productid, sum(c.qty)
 from customer
     inner join purchase b
@@ -178,9 +173,8 @@ from customer
 where a.name='John Doe' and a.state='NY'
 group by productid
 order by 2 desc;
-
--- "natural joins": use all columns that are named the same.
--- These can be dangerous, use with caution.
+-- "Natural Joins": use all columns that are named the same.
+-- This type of join can be dangerous, use with caution.
 select productid, sum(c.qty)
 from customer
     natural inner join purchase b --custid is join column
@@ -188,58 +182,48 @@ from customer
 where a.name='John Doe' and a.state='NY'
 group by productid
 order by 2 desc;
-
--- Few types of joins.
-
-inner join
-
+-- There are several types of joins.
+-- inner join
+-- Example:
 select ... from tableA inner join tableB on ...
--- records in both tableA and tableB have to exist to get a row of output.
-
-left outer join
-
+-- Records in both tableA and tableB have to exist to get a row of output.
+-- left outer join
+-- Example:
 select ... from tableA left outer join tableB on ...
--- all records from tableA, with potential matches in tableB.
-
+-- All records from tableA, with potential matches in tableB, if no match
+-- available in tableB, then it is null.
 select custid, purchaseid
 from customer a
     left outer join purchase b
     on a.custid=b.custid
-
--- output, e.g.:
-
+-- Example output:
 1, 2135
 1, 2324
 2, NULL
 3, 7350
-
+-- right outer join
 select ... from tableA right outer join tableB on ...
--- all records from tableB, with potential matches in tableA.
-
-full outer join
+-- All records from tableB, with potential matches in tableA, if no match
+-- available in tableA, it is null.
+-- full outer join
 -- essentially a combination of left and right outer joins.
-
 select custid, purchaseid
 from customer a
     full outer join purchaes b
     on a.custid=b.custid
-
--- output, e.g.:
-
+-- Example output:
 1, 2135
 1, 2324
 2, NULL
 3, 7350
 NULL, 5178
 NULL, 5312
-
 -- Getting customers who've never purchased anything.
 select ...
 from customer a
     left outer join purchase b
     on a.custid=b.custid
 where b.purchaseid is null
-
 -- Get customers who did purchase something.
 select distinct a.custid
 from customer a
