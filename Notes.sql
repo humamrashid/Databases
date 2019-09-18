@@ -187,11 +187,11 @@ where a.name='John Doe' and a.state='NY'
 group by productid
 order by 2 desc;
 -- There are several types of joins.
--- inner join
+-- inner join:
 -- Example:
 select ... from tableA inner join tableB on ...
 -- Records in both tableA and tableB have to exist to get a row of output.
--- left outer join
+-- left outer join:
 -- Example:
 select ... from tableA left outer join tableB on ...
 -- All records from tableA, with potential matches in tableB, if no match
@@ -205,12 +205,13 @@ from customer a
 1, 2324
 2, NULL
 3, 7350
--- right outer join
+-- right outer join:
+-- Example:
 select ... from tableA right outer join tableB on ...
 -- All records from tableB, with potential matches in tableA, if no match
 -- available in tableA, it is null.
--- full outer join
--- essentially a combination of left and right outer joins.
+-- full outer join:
+-- Example:
 select custid, purchaseid
 from customer a
     full outer join purchaes b
@@ -222,6 +223,7 @@ from customer a
 3, 7350
 NULL, 5178
 NULL, 5312
+-- Full outer is join essentially a combination of left and right outer joins.
 -- Getting customers who've never purchased anything.
 select ...
 from customer a
@@ -232,6 +234,6 @@ where b.purchaseid is null
 select distinct a.custid
 from customer a
     inner join purchase b
-    on a.custid=b.custid
+    on a.custid=b.custid;
 
 -- EOF.

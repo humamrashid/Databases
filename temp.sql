@@ -1,5 +1,6 @@
 /* Question 1. */
-SELECT description FROM product WHERE productid=42;
+SELECT description FROM product
+WHERE productid=42;
 
 /* Question 2. */
 SELECT lname, fname, street1, street2, city, state, zip FROM customer
