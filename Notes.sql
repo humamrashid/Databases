@@ -19,7 +19,7 @@
 -- a wider variety of operations beyond this and many differences exist between
 -- the operations supported in each.
 
--- Creating tables. Example:
+-- Creating tables and fields. Example:
 create table customer (
     custid bigint,
     name varchar(100),
@@ -30,6 +30,9 @@ create table customer (
     state varchar(2),
     zip varchar(5)
 );
+-- KEY IDEA (for creating tables): Don't declare fields as numbers if they're
+-- not going to be used for numerical operations. This is why zip code is a
+-- 'varchar' (basically a string) rather than an integer type.
 
 -- Inserting data. Example:
 insert int customer(custid, name, email)
