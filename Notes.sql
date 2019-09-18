@@ -31,8 +31,9 @@ create table customer (
     zip varchar(5)
 );
 -- KEY IDEA (for creating tables): Don't declare fields as numbers if they're
--- not going to be used for numerical operations. This is why zip code is a
--- 'varchar' (basically a string) rather than an integer type.
+-- not going to be used for numerical operations, especially if they have a
+-- fixed-size. This is why zip code is a 'varchar' (basically a string) rather
+-- than an integer type.
 
 -- Inserting data. Example:
 insert int customer(custid, name, email)
