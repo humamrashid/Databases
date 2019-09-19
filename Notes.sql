@@ -1,4 +1,6 @@
--- Notes on SQL, not actual SQL code!
+-- Notes on SQL, not actual SQL code! (Started taking these notes on day 3.)
+
+-- ##### Day 3 #####
 
 -- SQL (Structured Query Language). Industry and academic standard language for
 -- managing relational databses in a DBMS (Database Management System). SQL is
@@ -235,5 +237,187 @@ select distinct a.custid
 from customer a
     inner join purchase b
     on a.custid=b.custid;
+
+-- ##### Day 4 #####
+
+-- So far what we've covered is basically how things were done before 2003.
+
+-- Database usage in banks:
+-- Purpose of banks is to safekeep property/wealth for customers.
+-- In terms of databases, records must be kept for customers, accounts,
+-- transations, etc. All of these can be a considered tables in a database.
+-- Example:
+
+-- customer table.
+
+customer(cid,name,ssn,,street,city,state,zip,email)
+
+-- account table: has account id, customer id, and type.
+accnt(aid,cid,type)
+
+-- transaction log table: has transaction id, timestamp, account id, and amount.
+tlog(tlogid,tid,tim,aid,amnt)
+
+-- DDL:
+create table customer(
+    cid bigint, name varchar(100), ssn varchar(9),
+    street varchar(60), city varchar(60), state varchar(2), zip varchar(5),
+    email varchar(100));
+
+create table accnt(
+    aid bigint, cid bigint, type varchar(1));
+
+create table tlog(
+    tlogid bigint, tid bigint, tim timestamp, aid bigint, amnt numeric(18,8));
+
+-- potential change to support different "things"
+product(pid,type, -- ...whatever attributes for a particular thing is)
+tlog(tlogid,tid,tim,aid,qty,pid);
+
+-- DML:
+
+-- Inserting the data:
+
+insert into customer(cid,name,ssn,email)
+    values(1, 'John Doe', '123456789', 'john.doe@msn.com');
+insert into accnt(aid,cid,type)
+    values(1,1,'C');
+
+-- Scenario: John Doe deposits $100.00 into their checking account (aid=1).
+
+-- put $100 into account 1, during transaction 1.
+insert into tlog(tlogid,tid,tim,aid,amnt)
+    values(1,1,now(),1,100)
+
+-- take $100 from account 0 (cash account), during transaction 1.
+insert into tlog(tlogid,tid,tim,aid,amnt)
+    values(2,1,now(),0,-100);
+
+-- Most enterprise databases have a concept of 'sequences'.
+create sequence tlogid_seq;
+create sequence tid_seq;
+create sequence cid_seq;
+create sequence aid_seq;
+
+-- Inserting the data using sequences:
+
+insert into customer(cid,name,ssn,email)
+    values(nextval('cid_seq'), 'John Doe', '123456789', 'john.doe@msn.com');
+insert into accnt(aid,cid,type)
+    values(nextval('aid_seq'),1,'C');
+
+-- Scenario: John Doe deposits $100.00 into their checking account (aid=1).
+-- Using sequences.
+
+-- put $100 into account 1, during transaction 1.
+insert into tlog(tlogid,tid,tim,aid,amnt)
+    values(nextval('tlogid_seq'), nextval('tid_seq'),now(),1,100)
+
+-- take $100 from account 0 (cash account), during transaction 1.
+insert into tlog(tlogid,tid,tim,aid,amnt)
+    values(nextval('tlogid_seq'),currval('tid_seq'),now(),0,-100);
+
+-- find incomplete/corrupt transactions (those that don't sum to 0).
+select ...
+from tlog
+group by tid
+having sum(amnt) != 0;
+
+-- how much money is in account 1?
+select sum(amnt)
+from tlog
+where aid=1;
+
+-- how much money is in John Doe's ccounts?
+select sum(c.amnt)
+from customer a
+    inner join accnt b
+    on a.cid=b.cid
+    inner join tlog c
+    on b.aid=c.aid
+where a.name='John Doe';
+
+-- give balance for all cusotmers name John Doe.
+select cid,sum(c.amnt)
+from customer a
+    inner join accnt b
+    on a.cid=b.cid
+    inner join tlog c
+    on b.aid=c.aid
+where a.name='John Doe'
+group by cid;
+
+-- give balance for all cusotmers name John Doe on Jan., 1st, 2019.
+select cid,sum(c.amnt)
+from customer a
+    inner join accnt b
+    on a.cid=b.cid
+    inner join tlog c
+    on b.aid=c.aid
+where a.name='John Doe' and
+    c.tim <'2019-01-01' -- < because we don't want transactions on 01/01/19.
+group by cid;
+
+-- what's the account with the highest balance? (There could be more than 1.)
+with bals as (
+    select aid,sum(amnt) bal
+    from tlog
+    group by aid
+)
+select aid
+from bals
+where bal >=(select max(bal) from bals);
+
+-- get accounts with top 5 balances.
+with bals as (
+    select aid,sum(amnt) bal
+    from tlog
+    group by aid
+),
+rank as (
+    select a.*, dense_rank() over (order by bal) rnk
+    from bals
+)
+select aid,bal,rnk
+from rnks
+where rnk<=5;
+
+-- account type 'S' is savings, add 1% to every savings account.
+insert into tlog
+    -- get 1% of each balance.
+    with amnts as (
+        select aid,sum(amnt)*0.01 amnt -- 1% of account balance.
+        from accnt a
+            inner join tlog b
+            on a.aid=b.aid
+        where type='S'
+        group by aid
+    )
+    -- take the money out of cash and put into the savings.
+    -- no updates happen for any balances, insert implicitly updates the
+    -- account.
+    select nextval('tlogid_seq'), nextval('tid_seq'), now(), 0, -sum(amnt)
+    from amnts
+    union all
+    select nextval('tlogid_seq'), currval('tid_seq'), now(), aid, amnt
+    from amnts
+;
+
+-- calculate the tax burden by SSN (total account balance increase between
+-- 2018-01-01 and 2019-01-01).
+with bals as (
+    select ssn,
+        sum(case when tim<'2019-01-01' then amnt else 0 end) bal2019,
+        sum(case when tim<'2018-01-01' then amnt else 0 end) bal2018
+    from customer a
+        inner join accnt b
+        on a.cid=b.cid
+        inner join tlog c
+        on b.aid=c.aid
+    group by ssn
+)
+select ssn, bal2019-bal2018 incamnt
+from bals
+where bal2019 - bal2018 > 10000; -- only case if increase is > 10000.
 
 -- EOF.
