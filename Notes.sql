@@ -332,11 +332,15 @@ insert into tlog(tlogid,tid,tim,aid,amnt)
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(nextval('tlogid_seq'),currval('tid_seq'),now(),0,-100);
 
--- find incomplete/corrupt transactions (those that don't sum to 0).
+-- Query examples on bank data.
+
+-- Find incomplete/corrupt transactions (those that don't sum to 0).
 select ...
 from tlog
 group by tid
 having sum(amnt) != 0;
+-- Note that 'having' is meant to be used with groups; in practice, several DBMS
+-- allow using it in other contexts as well.
 
 -- how much money is in account 1?
 select sum(amnt)
