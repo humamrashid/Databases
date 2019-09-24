@@ -348,6 +348,7 @@ from tlog
 where aid=1;
 
 -- How much money is in John Doe's ccounts? (Could have more than 1 account!)
+-- Note that we are assuming here that only one customer is named John Doe.
 select sum(c.amnt)
 from customer a
     inner join accnt b
@@ -355,11 +356,15 @@ from customer a
     inner join tlog c
     on b.aid=c.aid
 where a.name='John Doe';
--- The above uses 2 inner joins, the first one joins the customer with the
+-- The above uses 2 inner joins; the first one joins the customer with the
 -- account by the customer id field (cid) and the second one joins the
--- transaction log with the account by the account id field (aid).
+-- transaction log with the account by the account id field (aid). Taken
+-- together, we get the transactions according to customer which is summed up.
+-- Note that this works because each deposit is a positive value and each
+-- withdrawal/charge is a negative value so sum total gives the amount left.
 
--- give balance for all cusotmers name John Doe.
+-- Give balance for all cusotmers named John Doe, listed by customer id.
+-- Here, we assume there could be more than 1 customer named John Doe.
 select cid,sum(c.amnt)
 from customer a
     inner join accnt b
