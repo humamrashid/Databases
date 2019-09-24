@@ -342,12 +342,12 @@ having sum(amnt) != 0;
 -- Note that 'having' is meant to be used with groups; in practice, several DBMS
 -- allow using it in other contexts as well.
 
--- how much money is in account 1?
+-- How much money is in account 1?
 select sum(amnt)
 from tlog
 where aid=1;
 
--- how much money is in John Doe's ccounts?
+-- How much money is in John Doe's ccounts? (Could have more than 1 account!)
 select sum(c.amnt)
 from customer a
     inner join accnt b
@@ -355,6 +355,9 @@ from customer a
     inner join tlog c
     on b.aid=c.aid
 where a.name='John Doe';
+-- The above uses 2 inner joins, the first one joins the customer with the
+-- account by the customer id field (cid) and the second one joins the
+-- transaction log with the account by the account id field (aid).
 
 -- give balance for all cusotmers name John Doe.
 select cid,sum(c.amnt)
