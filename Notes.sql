@@ -2,6 +2,8 @@
 
 -- ##### Day 3 #####
 
+-- Overview of basic SQL.
+
 -- SQL (Structured Query Language). Industry and academic standard language for
 -- managing relational databses in a DBMS (Database Management System). SQL is
 -- NOT case-sensitive.
@@ -242,33 +244,37 @@ from customer a
 
 -- So far what we've covered is basically how things were done before 2003.
 
--- Database usage in banks:
+-- Learning through case studies: database usage in banks.
+
 -- Purpose of banks is to safekeep property/wealth for customers.
 -- In terms of databases, records must be kept for customers, accounts,
--- transations, etc. All of these can be a considered tables in a database.
--- Example:
+-- transations, etc. All of these can be arranged by tables.
 
--- customer table.
+-- Example setup:
 
+-- Customer table: has customer id, customer name, customer address and customer
+-- email address..
 customer(cid,name,ssn,,street,city,state,zip,email)
 
--- account table: has account id, customer id, and type.
+-- Account table: has account id, customer id, and account type.
 accnt(aid,cid,type)
 
--- transaction log table: has transaction id, timestamp, account id, and amount.
+-- transaction log table: has transaction id, transaction timestamp, account id,
+-- and amount (processed in the transaction).
 tlog(tlogid,tid,tim,aid,amnt)
 
 -- DDL:
 create table customer(
     cid bigint, name varchar(100), ssn varchar(9),
     street varchar(60), city varchar(60), state varchar(2), zip varchar(5),
-    email varchar(100));
-
+    email varchar(100)
+);
 create table accnt(
-    aid bigint, cid bigint, type varchar(1));
-
+    aid bigint, cid bigint, type varchar(1)
+);
 create table tlog(
-    tlogid bigint, tid bigint, tim timestamp, aid bigint, amnt numeric(18,8));
+    tlogid bigint, tid bigint, tim timestamp, aid bigint, amnt numeric(18,8)
+);
 
 -- potential change to support different "things"
 product(pid,type, -- ...whatever attributes for a particular thing is)
