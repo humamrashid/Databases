@@ -318,7 +318,7 @@ insert into accnt(aid,cid,type)
     values(nextval('aid_seq'),1,'C');
 -- The above operations creates a customer record and account record with a
 -- sequence so that a unique value does not have to be manually entered by the
--- database admin.
+-- database admin. each time a new record is created.
 
 -- Scenario 2: John Doe deposits $100.00 into their checking account (aid=1).
 -- Transaction is processed using sequences.
@@ -327,7 +327,8 @@ insert into accnt(aid,cid,type)
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(nextval('tlogid_seq'),nextval('tid_seq'),now(),1,100)
 
--- take $100 from account 0 (cash account), during transaction 1.
+-- Take $100 from account 0 (cash account), during transaction 1.
+-- Note the currval(...) instead of nextval(...) for transaction id.
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(nextval('tlogid_seq'),currval('tid_seq'),now(),0,-100);
 
