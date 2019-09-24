@@ -286,7 +286,7 @@ create table tlog(
 -- Inserting the data:
 -- Skipping physical address here.
 insert into customer(cid,name,ssn,email)
-    values(1, 'John Doe', '123456789', 'john.doe@msn.com');
+    values(1,'John Doe','123456789','john.doe@msn.com');
 -- Account type can be 'C' for "checking".
 insert into accnt(aid,cid,type)
     values(1,1,'C');
@@ -313,16 +313,19 @@ create sequence aid_seq;
 
 -- Inserting the data using sequences:
 insert into customer(cid,name,ssn,email)
-    values(nextval('cid_seq'), 'John Doe', '123456789', 'john.doe@msn.com');
+    values(nextval('cid_seq'),'John Doe','123456789','john.doe@msn.com');
 insert into accnt(aid,cid,type)
     values(nextval('aid_seq'),1,'C');
+-- The above operations creates a customer record and account record with a
+-- sequence so that a unique value does not have to be manually entered by the
+-- database admin.
 
--- Scenario: John Doe deposits $100.00 into their checking account (aid=1).
--- Using sequences.
+-- Scenario 2: John Doe deposits $100.00 into their checking account (aid=1).
+-- Transaction is processed using sequences.
 
--- put $100 into account 1, during transaction 1.
+-- Put $100.00 into account 1, during transaction 1.
 insert into tlog(tlogid,tid,tim,aid,amnt)
-    values(nextval('tlogid_seq'), nextval('tid_seq'),now(),1,100)
+    values(nextval('tlogid_seq'),nextval('tid_seq'),now(),1,100)
 
 -- take $100 from account 0 (cash account), during transaction 1.
 insert into tlog(tlogid,tid,tim,aid,amnt)
