@@ -261,6 +261,7 @@ accnt(aid,cid,type)
 
 -- transaction log table: has transaction id, transaction timestamp, account id,
 -- and amount (processed in the transaction).
+-- NOTE: a single transaction consists of 1 or more records.
 tlog(tlogid,tid,tim,aid,amnt)
 
 -- DDL:
@@ -276,37 +277,41 @@ create table tlog(
     tlogid bigint, tid bigint, tim timestamp, aid bigint, amnt numeric(18,8)
 );
 
--- potential change to support different "things"
-product(pid,type, -- ...whatever attributes for a particular thing is)
-tlog(tlogid,tid,tim,aid,qty,pid);
+-- Potential change to support different "things".
+-- product(pid,type, -- ...whatever attributes for a particular thing is)
+-- tlog(tlogid,tid,tim,aid,qty,pid);
 
 -- DML:
 
 -- Inserting the data:
-
+-- Skipping physical address here.
 insert into customer(cid,name,ssn,email)
     values(1, 'John Doe', '123456789', 'john.doe@msn.com');
+-- Account type can be 'C' for "checking".
 insert into accnt(aid,cid,type)
     values(1,1,'C');
 
--- Scenario: John Doe deposits $100.00 into their checking account (aid=1).
+-- Scenario 1: John Doe deposits $100.00 into their checking account (aid=1).
 
--- put $100 into account 1, during transaction 1.
+-- Put $100 into account 1, during transaction 1.
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(1,1,now(),1,100)
 
--- take $100 from account 0 (cash account), during transaction 1.
+-- Take $100 from account 0 (cash account), during transaction 1.
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(2,1,now(),0,-100);
 
--- Most enterprise databases have a concept of 'sequences'.
+-- Most enterprise databases have a concept of 'sequences', essentially a method
+-- to generate unique integer values that are not isolated from each other
+-- (meaning 2 tables cannot share the same value) and are incremented with each
+-- use. Every time a record uses a sequence, the sequence is incremented, which
+-- may lead to gaps (for example in transactions with rollbacks).
 create sequence tlogid_seq;
 create sequence tid_seq;
 create sequence cid_seq;
 create sequence aid_seq;
 
 -- Inserting the data using sequences:
-
 insert into customer(cid,name,ssn,email)
     values(nextval('cid_seq'), 'John Doe', '123456789', 'john.doe@msn.com');
 insert into accnt(aid,cid,type)
