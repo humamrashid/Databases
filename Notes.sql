@@ -422,7 +422,7 @@ where rnk <=5;
 
 -- Account type 'S' is savings, add 1% to every savings account.
 insert into tlog
-    -- get 1% of each balance and name that 'amnt'.
+    -- get 1% of each balance by account and name that 'amnt'.
     with amnts as (
         select aid,sum(b.amnt)*0.01 amnt
         from accnt a
