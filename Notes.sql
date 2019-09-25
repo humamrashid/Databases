@@ -457,7 +457,7 @@ with bals as (
         on b.aid=c.aid
     group by ssn
 )
-select ssn, bal2019-bal2018 incamnt
+select ssn, bal2019 - bal2018 incamnt
 from bals
 where bal2019 - bal2018 > 10000;
 -- The reported SSNs are only those who balance increased by more than 10000.
