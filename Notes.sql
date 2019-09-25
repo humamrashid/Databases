@@ -439,10 +439,10 @@ insert into tlog
     union all
     select nextval('tlogid_seq'),currval('tid_seq'),now(),aid,amnt
     from amnts
-    -- The above 2 queries are combined with union all and the records generated
-    -- are inserted as records into the transaction log.
-    -- Note that union all preserves duplicate records unlike union.
 ;
+-- The above 2 queries after the CTE are combined with union all and the records
+-- generated are inserted as records into the transaction log.
+-- Note that union all preserves duplicate records unlike union.
 
 -- calculate the tax burden by SSN (total account balance increase between
 -- 2018-01-01 and 2019-01-01).
