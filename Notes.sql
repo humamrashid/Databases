@@ -440,11 +440,11 @@ insert into tlog
     select nextval('tlogid_seq'),currval('tid_seq'),now(),aid,amnt
     from amnts
 ;
--- The above 2 queries after the CTE are combined with union all and the records
--- generated are inserted as records into the transaction log.
--- Note that union all preserves duplicate records unlike union.
+-- The above 2 queries after the CTE are combined with 'union all' and the
+-- records generated are inserted as records into the transaction log.
+-- Note that 'union all' preserves duplicate records unlike 'union'.
 
--- calculate the tax burden by SSN (total account balance increase between
+-- Calculate the tax burden by SSN (total account balance increase between
 -- 2018-01-01 and 2019-01-01).
 with bals as (
     select ssn,
@@ -459,6 +459,7 @@ with bals as (
 )
 select ssn, bal2019-bal2018 incamnt
 from bals
-where bal2019 - bal2018 > 10000; -- only case if increase is > 10000.
+where bal2019 - bal2018 > 10000;
+-- The reported SSNs are only those who balance increased by more than 10000.
 
 -- EOF.
