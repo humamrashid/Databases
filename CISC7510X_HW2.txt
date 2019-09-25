@@ -53,7 +53,7 @@ WHERE a.zip='10001';
 /* Question 8. */
 SELECT 100.0 * SUM(CASE WHEN b.productid=42 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
 FROM customer a
-    INNER JOIN product b
+    INNER JOIN purchase b
     ON a.customerid=b.customerid;
 
 /* Question 10. */
@@ -81,4 +81,4 @@ SELECT a.*
 FROM customers a
     INNER JOIN purchase b
     ON a.customerid=b.customerid
-WHERE purhcasetimestamp >='2019-07-04';
+WHERE productid=24 and purhcasetimestamp <'2019-07-04';
