@@ -405,7 +405,8 @@ where bal >=(select max(bal) from bals);
 -- Note that in the CTE, each sum is given a name 'bal' so that the super query
 -- and subquery both use it in comparing the greatest balance.
 
--- get accounts with top 5 balances.
+-- Get accounts with top 5 balances.
+-- Ranking is supported in a similar fashion to CTEs.
 with bals as (
     select aid,sum(amnt) bal
     from tlog
@@ -417,13 +418,13 @@ rank as (
 )
 select aid,bal,rnk
 from rnks
-where rnk<=5;
+where rnk <=5;
 
--- account type 'S' is savings, add 1% to every savings account.
+-- Account type 'S' is savings, add 1% to every savings account.
 insert into tlog
-    -- get 1% of each balance.
+    -- get 1% of each balance and name that 'amnt'.
     with amnts as (
-        select aid,sum(amnt)*0.01 amnt -- 1% of account balance.
+        select aid,sum(amnt)*0.01 amnt
         from accnt a
             inner join tlog b
             on a.aid=b.aid
@@ -433,11 +434,14 @@ insert into tlog
     -- take the money out of cash and put into the savings.
     -- no updates happen for any balances, insert implicitly updates the
     -- account.
-    select nextval('tlogid_seq'), nextval('tid_seq'), now(), 0, -sum(amnt)
+    select nextval('tlogid_seq'),nextval('tid_seq'),now(),0,-sum(amnt)
     from amnts
     union all
-    select nextval('tlogid_seq'), currval('tid_seq'), now(), aid, amnt
+    select nextval('tlogid_seq'),currval('tid_seq'),now(),aid,amnt
     from amnts
+    -- The above 2 queries are combined with union all and the records generated
+    -- are inserted as records into the transaction log.
+    -- Note that union all preserves duplicate records unlike union.
 ;
 
 -- calculate the tax burden by SSN (total account balance increase between
