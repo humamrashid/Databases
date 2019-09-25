@@ -327,7 +327,7 @@ insert into accnt(aid,cid,type)
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(nextval('tlogid_seq'),nextval('tid_seq'),now(),1,100)
 
--- Take $100 from account 0 (cash account), during transaction 1.
+-- Take $100.00 from account 0 (cash account), during transaction 1.
 -- Note the currval(...) instead of nextval(...) for transaction id.
 insert into tlog(tlogid,tid,tim,aid,amnt)
     values(nextval('tlogid_seq'),currval('tid_seq'),now(),0,-100);
@@ -373,16 +373,18 @@ from customer a
     on b.aid=c.aid
 where a.name='John Doe'
 group by cid;
+-- Group by here makes up separate groups according to cid and the query is
+-- separately run on each group.
 
--- give balance for all cusotmers name John Doe on Jan., 1st, 2019.
+-- Give balance for all customers named John Doe on January 1st, 2019.
+-- 'On' a day here means before any transactions on the day.
 select cid,sum(c.amnt)
 from customer a
     inner join accnt b
     on a.cid=b.cid
     inner join tlog c
     on b.aid=c.aid
-where a.name='John Doe' and
-    c.tim <'2019-01-01' -- < because we don't want transactions on 01/01/19.
+where a.name='John Doe' and c.tim <'2019-01-01'
 group by cid;
 
 -- what's the account with the highest balance? (There could be more than 1.)
