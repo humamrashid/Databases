@@ -377,7 +377,7 @@ group by cid;
 -- separately run on each group.
 
 -- Give balance for all customers named John Doe on January 1st, 2019.
--- 'On' a day here means before any transactions on the day.
+-- 'On' a day here means before any transactions on that day.
 select cid,sum(c.amnt)
 from customer a
     inner join accnt b
@@ -386,8 +386,12 @@ from customer a
     on b.aid=c.aid
 where a.name='John Doe' and c.tim <'2019-01-01'
 group by cid;
+-- As seen above, comparisons operators work on timestamp values.
 
--- what's the account with the highest balance? (There could be more than 1.)
+-- What's the account with the highest balance? (There could be more than 1!)
+-- This query uses a CTE, essentially creating a virtual table called 'bals'.
+-- 'bals' becomes a table whose records are the results of the query inside the
+-- 'with bals as (...)'.
 with bals as (
     select aid,sum(amnt) bal
     from tlog
@@ -396,6 +400,10 @@ with bals as (
 select aid
 from bals
 where bal >=(select max(bal) from bals);
+-- This query also uses a subquery (query within a query) which is of the form
+-- 'select ... from ... where (select ... from ...)'.
+-- Note that in the CTE, each sum is given a name 'bal' so that the super query
+-- and subquery both use it in comparing the greatest balance.
 
 -- get accounts with top 5 balances.
 with bals as (
