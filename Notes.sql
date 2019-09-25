@@ -424,7 +424,7 @@ where rnk <=5;
 insert into tlog
     -- get 1% of each balance and name that 'amnt'.
     with amnts as (
-        select aid,sum(amnt)*0.01 amnt
+        select aid,sum(b.amnt)*0.01 amnt
         from accnt a
             inner join tlog b
             on a.aid=b.aid
