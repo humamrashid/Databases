@@ -42,6 +42,14 @@ WITH perday AS (
     SELECT eventid FROM doorlog
     WHERE (doorid=7 AND event='E');
 
+/* Question 6. */
+
+/* Question 7. */
+
+/* Question 8. */
+
+/* Question 9. */
+
 /* Question 10. */
 SELECT username
 FROM doorlog
