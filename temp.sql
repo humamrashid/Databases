@@ -6,7 +6,7 @@ WHERE doorid=1 AND event='E';
 /* Question 2. */
 WITH in_bathroom AS (
     SELECT eventid FROM doorlog WHERE doorid=2 AND event='E'
-    MINUS
+    EXCEPT
     SELECT eventid FROM doorlog WHERE doorid=2 AND event='X'
 )
 SELECT COUNT(*)
@@ -16,7 +16,7 @@ FROM in_bathroom;
 WITH in_building AS (
     SELECT eventid FROM doorlog
     WHERE (doorid=1 OR doorid=3) AND event='E'
-    MINUS
+    EXCEPT
     SELECT eventid FROM doorlog
     WHERE (doorid=1 OR doorid=3) AND event='X'
 )
@@ -29,10 +29,20 @@ WITH in_buildin0704 AS (
     WHERE
         ((doorid=1 OR doorid=3) AND event='E')
         AND tim <'2019-07-04 22:00:00'
-    MINUS
+    EXCEPT
     SELECT eventid FROM doorlog
     WHERE ((doorid=1 OR doorid=3) AND event='X')
         AND tim >='2019-07-04 22:00:01'
 )
 SELECT COUNT(*)
 FROM in_building0704;
+
+/* Question 5. */
+WITH perday AS (
+    SELECT eventid FROM doorlog
+    WHERE (doorid=7 AND event='E');
+
+/* Question 10. */
+SELECT username
+FROM doorlog
+WHERE event='X' AND tim <'2017-07-03 13:00:00';

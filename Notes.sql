@@ -462,4 +462,36 @@ from bals
 where bal2019 - bal2018 > 10000;
 -- The reported SSNs are only those who balance increased by more than 10000.
 
+-- ##### Day 5 #####
+
+-- Look at notes, not much SQL today.
+
+-- Loading data (Postgresql):
+psql
+\copy tablename from FILE
+\copy tablename to FILE
+
+-- Indexes and Joins.
+
+-- For example, inner joins.
+select ...
+from tableA a
+    inner join tableB b
+    on ...
+where ...
+
+-- How to do joins with regular programming languages?
+-- Join tableA.csv and tableB.csv
+
+-- First attempt, nested loop join (pseudo-code):
+for (all records in tableA) {
+    for (all records in tableB) {
+        if (condition is satisfied)
+            output record
+    }
+}
+-- This is very inefficient, O(n^2). For large datasets, it doesn't work.
+
+-- Hash Joins: much more efficient, almost linear O(n+m) or O(nlogn + mlogm).
+
 -- EOF.

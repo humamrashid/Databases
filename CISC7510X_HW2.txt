@@ -55,10 +55,29 @@ FROM customer a
 WHERE a.zip='10001';
 
 /* Question 8. */
-SELECT 100.0 * SUM(CASE WHEN b.productid=42 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
-FROM customer a
-    INNER JOIN purchase b
-    ON a.customerid=b.customerid;
+WITH customers_distinct AS (
+    SELECT DISTINCT a.customerid
+    FROM customer a
+        INNER JOIN purchase b
+        ON a.customerid=b.customerid;
+)
+SELECT 100.0 * SUM(CASE WHEN d.productid=42 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
+FROM customers_distinct c
+    INNER JOIN purchase d
+    ON c.customerid=d.customerid;
+
+/* Question 9. */
+WITH buyers42 AS (
+    SELECT a.*
+    FROM customer a
+        INNER JOIN purchase b
+        ON a.customerid=b.customerid
+    WHERE b.productid=42;
+)
+SELECT 100.0 * SUM(CASE WHEN d.productid=24 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
+FROM buyers_42 c
+    INNER JOIN purchase d
+    ON c.customerid=d.customerid;
 
 /* Question 10. */
 SELECT a.productid, SUM(a.quantity)
