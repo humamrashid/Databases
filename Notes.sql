@@ -490,8 +490,14 @@ for (all records in tableA) {
             output record
     }
 }
--- This is very inefficient, O(n^2). For large datasets, it doesn't work.
+-- This is very inefficient, O(n^2). For large datasets, it doesn't work (well).
 
--- Hash Joins: much more efficient, almost linear O(n+m) or O(nlogn + mlogm).
+-- Look over provided notes for different types of indexes and joins.
+
+-- ##### Day 6 #####
+
+-- Analytical Functions (also called Windowing Functions) in SQL.
+-- Allows for ordering data in a database to get summaries, running totals, etc.
+-- Look at notes for analytical functions on website.
 
 -- EOF.
