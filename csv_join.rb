@@ -40,16 +40,14 @@ def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
       if i[key_index] == j[key_index]
-        puts "#{i[key_index]} #{i[1..i.length].to_csv}"\
-          "#{j[1..j.length].to_csv}"
+        puts "#{i[key_index]} #{i[1..i.length].to_csv} #{j[1..j.length].to_csv}"
       end
     end
   end
 end
 
 if ARGV.length != 4 or (choice = proc_arg(ARGV[0])).nil?
-  abort "Usage: #{$0} < -b | -m | -n > <key_index>"
-    + "<file1> <file2>"
+  abort "Usage: #{$0} < -b | -m | -n > <key_index> <file1> <file2>"
 end
 
 file1 = CSV.read(ARGV[2])
