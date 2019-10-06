@@ -1,5 +1,7 @@
 1,john,male,married,12/15/86,doctor
 2,jane,female,married,10/23/90,nurse
-3,robert,male,unmarried,12/15/86,engineer
+3,robert,male,single,12/15/86,engineer
 4,mary,female,married,10/23/90,teacher
-8,emily,female,unmarried,10/23/90,reporter
+8,emily,female,single,10/23/90,reporter
+17,carol,female,married,05/14/94,blogger
+7,jennifer,female,single,07/15/97,teacher

@@ -53,6 +53,7 @@ def hash_join(key_index, file1, file2)
 end
 
 def merge_join(key_index, file1, file2)
+  puts file1.sort_by! { |a| a[key_index] }.to_s
 end
 
 def nested_join(key_index, file1, file2)
