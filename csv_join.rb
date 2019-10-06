@@ -9,11 +9,13 @@
 #
 # CLI arguments:
 #   1.) < -h | -m | -n >, for join implementation type
-#   (hash, merge and nested respectively).
+#   (hash, merge and nested-loop respectively).
 #
 #   2.) <key_index>, for index of key to join records on,
 #   (0 to number_of_fields - 1). Each key is assumed to be
-#   unique to a record.
+#   unique to a record in a table and each key is also
+#   assumed to be 'comparable' so records can be sorted (for
+#   merge joins).
 #
 #   3.) <file1> <file2>, CSV files to join.
 
@@ -38,12 +40,14 @@ end
 
 def hash_join(key_index, file1, file2)
   f1_htable = Hash.new
-  file1.each { |i| f1_htable.store(i[key_index].hash, i) }
+  file1.each do |i|
+    f1_htable.store(i[key_index].hash, i)
+  end
   file2.each do |j|
     f1_val = f1_htable[j[key_index].hash]
     puts "#{j[key_index]} #{f1_val.reject \
-      {|e| e == j[key_index]}.to_csv.chomp} #{j.reject \
-      { |e| e == j[key_index]}.to_csv.chomp}" \
+      { |e| e == j[key_index] }.to_csv.chomp} #{j.reject \
+      { |e| e == j[key_index] }.to_csv.chomp}" \
       unless f1_val.nil?
   end
 end
@@ -54,11 +58,10 @@ end
 def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
-      if i[key_index] == j[key_index]
-        puts "#{i[key_index]} "\
-          "#{i.to_csv.chomp} "\
-          "#{j.to_csv.chomp}"
-      end
+      puts "#{i[key_index]} #{i.reject \
+        { |e| e == i[key_index] }.to_csv.chomp} #{j.reject \
+        { |e| e == i[key_index] }.to_csv.chomp}" \
+        if i[key_index] == j[key_index]
     end
   end
 end
