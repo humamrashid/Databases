@@ -21,6 +21,17 @@
 
 require 'csv'
 
+# Adding methods to String class to check if a String value
+# is representing and integer or float.
+class String
+  def is_int?
+    Integer(self) && true rescue false
+  end
+  def is_float?
+    Float(self) && true rescue false
+  end
+end
+
 def proc_arg(opt)
   case opt
   when "-h"
@@ -41,7 +52,8 @@ end
 def hash_join(key_index, file1, file2)
   f1_htable = Hash.new
   file1.each do |i|
-    f1_htable.store(i[key_index].hash, i)
+    f1_htable.store(i[key_index].hash, i) \
+      unless i[key_index].nil?
   end
   file2.each do |j|
     f1_val = f1_htable[j[key_index].hash]
@@ -52,17 +64,33 @@ def hash_join(key_index, file1, file2)
   end
 end
 
+# merge_join() assumes join key is 'comparable' and treats
+# the key as a string unless it represents a numeric type
+# (int or float).
 def merge_join(key_index, file1, file2)
-  puts file1.sort_by! { |a| a[key_index] }.to_s
+  key = file1[0][key_index]
+  if key.is_int?
+    file1.sort_by! { |a| a[key_index].to_i }
+    file2.sort_by! { |a| a[key_index].to_i }
+  elsif key.is_float?
+    file1.sort_by! { |a| a[key_index].to_f }
+    file2.sort_by! { |a| a[key_index].to_f }
+  else
+    file1.sort_by! { |a| a[key_index] }
+    file2.sort_by! { |a| a[key_index] }
+  end
 end
 
+# nested_join() works ok for number of records upto the tens
+# of thousands.
 def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
       puts "#{i[key_index]} #{i.reject \
         { |e| e == i[key_index] }.to_csv.chomp} #{j.reject \
         { |e| e == i[key_index] }.to_csv.chomp}" \
-        if i[key_index] == j[key_index]
+        if (!i[key_index].nil? and !j[key_index].nil?) \
+          and (i[key_index] == j[key_index])
     end
   end
 end
@@ -76,9 +104,14 @@ file1 = CSV.read(ARGV[2])
 exit_if_empty(file1)
 file2 = CSV.read(ARGV[3])
 exit_if_empty(file2)
-key_index = ARGV[1].to_i
-if (key_index < 0) or (key_index >= file1[0].length)
-  abort "Join key index is out of bounds!"
+
+if ARGV[1].is_int?
+  key_index = ARGV[1].to_i
+  if (key_index < 0) or (key_index >= file1[0].length)
+    abort "Error: key_index out of bounds!"
+  end
+else
+  abort "Error: key_index must be an integer value!"
 end
 
 case choice
