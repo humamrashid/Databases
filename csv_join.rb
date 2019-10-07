@@ -5,7 +5,9 @@
 # csv_join: A join implementation for CSV files.
 # Assumes both CSV files have same number of fields per
 # record and the join key at the same position in each
-# record.
+# record. This implementation essentially follows a
+# rudimentary version of the UNIX join utility specific to
+# CSV files.
 #
 # CLI arguments:
 #   1.) < -h | -m | -n >, for join implementation type
@@ -49,6 +51,9 @@ def exit_if_empty(file)
   abort "Invalid join: #{file} is empty!" if file.empty?
 end
 
+# hash_join() puts all records of the first CSV file into a
+# hashtable and compares against hashes of the join key for
+# records in the second CSV file.
 def hash_join(key_index, file1, file2)
   f1_htable = Hash.new
   file1.each do |i|
@@ -61,6 +66,9 @@ def hash_join(key_index, file1, file2)
       { |e| e == j[key_index] }.to_csv.chomp} #{j.reject \
       { |e| e == j[key_index] }.to_csv.chomp}" \
       unless f1_val.nil?
+      # Above checks to ensure that the join key is not
+      # included as part of the output records in keeping
+      # with the UNIX join utility's output.
   end
 end
 
@@ -79,6 +87,7 @@ def merge_join(key_index, file1, file2)
     file1.sort_by! { |a| a[key_index] }
     file2.sort_by! { |a| a[key_index] }
   end
+
 end
 
 # nested_join() works ok for number of records upto the tens
@@ -91,6 +100,9 @@ def nested_join(key_index, file1, file2)
         { |e| e == i[key_index] }.to_csv.chomp}" \
         if (!i[key_index].nil? and !j[key_index].nil?) \
           and (i[key_index] == j[key_index])
+      # Above checks to ensure that the join key is not
+      # included as part of the output records in keeping
+      # with the UNIX join utility's output.
     end
   end
 end
