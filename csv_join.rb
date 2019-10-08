@@ -66,9 +66,6 @@ def hash_join(key_index, file1, file2)
       { |e| e == j[key_index] }.to_csv.chomp} #{j.reject \
       { |e| e == j[key_index] }.to_csv.chomp}" \
       unless f1_val.nil?
-      # Above checks to ensure that the join key is not
-      # included as part of the output records in keeping
-      # with the UNIX join utility's output.
   end
 end
 
@@ -76,18 +73,69 @@ end
 # the key as a string unless it represents a numeric type
 # (int or float).
 def merge_join(key_index, file1, file2)
+  # Sorting part.
   key = file1[0][key_index]
   if key.is_int?
+    # Treat the key as an integer.
     file1.sort_by! { |a| a[key_index].to_i }
     file2.sort_by! { |a| a[key_index].to_i }
   elsif key.is_float?
+    # Treat the key as a float.
     file1.sort_by! { |a| a[key_index].to_f }
     file2.sort_by! { |a| a[key_index].to_f }
   else
+    # Sort them according to lexical order.
     file1.sort_by! { |a| a[key_index] }
     file2.sort_by! { |a| a[key_index] }
   end
-
+  # Merging part.
+  i = j = 0
+  r = file1[i]
+  q = file2[j]
+  while i != file1.length and j != file2.length
+    if r[key_index] > q[key_index]
+      j += 1
+      q = file2[j]
+    elsif r[key_index] < q[key_index]
+      i += 1
+      r = file1[i]
+    else # The records match on the join key.
+      puts "#{r[key_index]} #{r.reject \
+        { |e| e == r[key_index] }.to_csv.chomp} #{q.reject \
+        { |e| e == r[key_index] }.to_csv.chomp}" \
+        unless r[key_index].nil? or q[key_index].nil?
+      k = j + 1
+      t = file2[k]
+      # Check for further records that match with r on the
+      # join key.
+      while k != file2.length \
+          and r[key_index] == t[key_index]
+        puts "#{r[key_index]} #{r.reject \
+          { |e| e == r[key_index] }.to_csv.chomp} #{t.reject \
+          { |e| e == r[key_index] }.to_csv.chomp}" \
+          unless r[key_index].nil? or t[key_index].nil?
+        k += 1
+        t = file2[k]
+      end
+      l = i + 1
+      s = file1[l]
+      # Check for further records that match with q on the
+      # join key.
+      while l != file1.length \
+          and q[key_index] == s[key_index]
+        puts "#{q[key_index]} #{q.reject \
+          { |e| e == q[key_index] }.to_csv.chomp} #{s.reject \
+          { |e| e == q[key_index] }.to_csv.chomp}" \
+          unless q[key_index].nil? or s[key_index].nil?
+        l += 1
+        s = file1[k]
+      end
+      i += 1
+      r = file1[i]
+      j += 1
+      q = file2[j]
+    end
+  end
 end
 
 # nested_join() works ok for number of records upto the tens
