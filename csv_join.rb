@@ -26,25 +26,25 @@ require 'csv'
 # Adding methods to String class to check if a String value
 # is representing and integer or float.
 class String
-  def is_int?
+  def int?
     Integer(self) && true rescue false
   end
-  def is_float?
+
+  def float?
     Float(self) && true rescue false
   end
 end
 
 def proc_arg(opt)
   case opt
-  when "-h"
-    return :hash
-  when "-m"
-    return :merge
-  when "-n"
-    return :nested
-  else
-    return nil
+  when '-h'
+    :hash
+  when '-m'
+    :merge
+  when '-n'
+    :nested
   end
+  nil
 end
 
 def exit_if_empty(file)
@@ -53,9 +53,10 @@ end
 
 # hash_join() puts all records of the first CSV file into a
 # hashtable and compares against hashes of the join key for
-# records in the second CSV file.
+# records in the second CSV file. Output is not sorted on
+# join key.
 def hash_join(key_index, file1, file2)
-  f1_htable = Hash.new
+  f1_htable = {}
   file1.each do |i|
     f1_htable.store(i[key_index].hash, i) \
       unless i[key_index].nil?
@@ -69,17 +70,14 @@ def hash_join(key_index, file1, file2)
   end
 end
 
-# merge_join() assumes join key is 'comparable' and treats
-# the key as a string unless it represents a numeric type
-# (int or float).
-def merge_join(key_index, file1, file2)
-  # Sorting part.
-  key = file1[0][key_index]
-  if key.is_int?
+# merge_sorter(): sorts CSV files for merge_join() by
+# sorting records in-place.
+def merge_sorter(key, file1, file2)
+  if key.int?
     # Treat the key as an integer.
     file1.sort_by! { |a| a[key_index].to_i }
     file2.sort_by! { |a| a[key_index].to_i }
-  elsif key.is_float?
+  elsif key.float?
     # Treat the key as a float.
     file1.sort_by! { |a| a[key_index].to_f }
     file2.sort_by! { |a| a[key_index].to_f }
@@ -88,66 +86,65 @@ def merge_join(key_index, file1, file2)
     file1.sort_by! { |a| a[key_index] }
     file2.sort_by! { |a| a[key_index] }
   end
+end
+
+# merge_join() assumes join key is 'comparable' and treats
+# the key as a string unless it represents a numeric type
+# (int or float). Output is sorted on join key.
+def merge_join(key_index, file1, file2)
+  # Sorting part.
+  merge_sorter(file1[0][key_index], file1, file2)
   # Merging part.
-  i = j = 0
-  r = file1[i]
-  q = file2[j]
-  while i != file1.length and j != file2.length
+  r = file1[i = 0]
+  q = file2[j = 0]
+  while i != file1.length && j != file2.length
     if r[key_index] > q[key_index]
-      j += 1
-      q = file2[j]
+      q = file2[j += 1]
     elsif r[key_index] < q[key_index]
-      i += 1
-      r = file1[i]
+      r = file1[i += 1]
     else # The records match on the join key.
       puts "#{r[key_index]} #{r.reject \
         { |e| e == r[key_index] }.to_csv.chomp} #{q.reject \
         { |e| e == r[key_index] }.to_csv.chomp}" \
-        unless r[key_index].nil? or q[key_index].nil?
-      k = j + 1
-      t = file2[k]
+        unless r[key_index].nil? || q[key_index].nil?
+      t = file2[k = j + 1]
       # Check for further records that match with r on the
       # join key.
       while k != file2.length \
-          and r[key_index] == t[key_index]
+          && r[key_index] == t[key_index]
         puts "#{r[key_index]} #{r.reject \
           { |e| e == r[key_index] }.to_csv.chomp} #{t.reject \
           { |e| e == r[key_index] }.to_csv.chomp}" \
-          unless r[key_index].nil? or t[key_index].nil?
-        k += 1
-        t = file2[k]
+          unless r[key_index].nil? || t[key_index].nil?
+        t = file2[k += 1]
       end
-      l = i + 1
-      s = file1[l]
+      s = file1[l = i + 1]
       # Check for further records that match with q on the
       # join key.
       while l != file1.length \
-          and q[key_index] == s[key_index]
+          && q[key_index] == s[key_index]
         puts "#{q[key_index]} #{q.reject \
           { |e| e == q[key_index] }.to_csv.chomp} #{s.reject \
           { |e| e == q[key_index] }.to_csv.chomp}" \
-          unless q[key_index].nil? or s[key_index].nil?
-        l += 1
-        s = file1[k]
+          unless q[key_index].nil? || s[key_index].nil?
+        s = file1[l += 1]
       end
-      i += 1
-      r = file1[i]
-      j += 1
-      q = file2[j]
+      r = file1[i += 1]
+      q = file2[j += 1]
     end
   end
 end
 
 # nested_join() works ok for number of records upto the tens
-# of thousands.
+# of thousands. Output is not sorted on join key.
 def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
       puts "#{i[key_index]} #{i.reject \
         { |e| e == i[key_index] }.to_csv.chomp} #{j.reject \
         { |e| e == i[key_index] }.to_csv.chomp}" \
-        if (!i[key_index].nil? and !j[key_index].nil?) \
-          and (i[key_index] == j[key_index])
+        if (!i[key_index].nil? && !j[key_index].nil?) \
+          && (i[key_index] == j[key_index])
       # Above checks to ensure that the join key is not
       # included as part of the output records in keeping
       # with the UNIX join utility's output.
@@ -155,9 +152,9 @@ def nested_join(key_index, file1, file2)
   end
 end
 
-if ARGV.length != 4 or (choice = proc_arg(ARGV[0])).nil?
-  msg = "Usage: #{$0} < -h | -m | -n > <key_index>"\
-    " <file1> <file2>"
+if ARGV.length != 4 || (choice = proc_arg(ARGV[0])).nil?
+  msg = "Usage: #{$PROGRAM_NAME} < -h | -m | -n > "\
+    "<key_index> <file1> <file2>"
   abort msg
 end
 file1 = CSV.read(ARGV[2])
@@ -165,13 +162,13 @@ exit_if_empty(file1)
 file2 = CSV.read(ARGV[3])
 exit_if_empty(file2)
 
-if ARGV[1].is_int?
+if ARGV[1].int?
   key_index = ARGV[1].to_i
-  if (key_index < 0) or (key_index >= file1[0].length)
-    abort "Error: key_index out of bounds!"
+  if (key_index < 0) || (key_index >= file1[0].length)
+    abort 'Error: key_index out of bounds!'
   end
 else
-  abort "Error: key_index must be an integer value!"
+  abort 'Error: key_index must be an integer value!'
 end
 
 case choice
