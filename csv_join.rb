@@ -4,7 +4,7 @@
 #
 # csv_join: A join implementation for CSV files.
 # Assumes both CSV files have same number of fields per
-# record and the join key at the same position in each
+# record and the join key is at the same position in each
 # record. This implementation essentially follows a
 # rudimentary version of the UNIX join utility specific to
 # CSV files.
@@ -35,6 +35,31 @@ class String
   end
 end
 
+# Checks if a string field value is less than another
+# according to type represented (string, int or float).
+def is_less_than(val1, val2)
+  if val1.int?
+    val1.to_i < val2.to_i
+  elsif val1.float?
+    val1.to_f < val2.to_f
+  else
+    val1 < val2
+  end
+end
+
+# Checks if a string field value is greater than another
+# according to type represented (string, int or float).
+def is_greater_than(val1, val2)
+  if val1.int?
+    val1.to_i > val2.to_i
+  elsif val1.float?
+    val1.to_f > val2.to_f
+  else
+    val1 > val2
+  end
+end
+
+# Checks for valid CLI arguments for join type.
 def proc_arg(opt)
   case opt
   when '-h'
@@ -43,12 +68,14 @@ def proc_arg(opt)
     :merge
   when '-n'
     :nested
+  else
+    nil
   end
-  nil
 end
 
+# Exits with error message if 'file' is empty.
 def exit_if_empty(file)
-  abort "Invalid join: #{file} is empty!" if file.empty?
+  abort "Error: #{file} is empty!" if file.empty?
 end
 
 # hash_join() puts all records of the first CSV file into a
@@ -72,7 +99,8 @@ end
 
 # merge_sorter(): sorts CSV files for merge_join() by
 # sorting records in-place.
-def merge_sorter(key, file1, file2)
+def merge_sorter(key_index, file1, file2)
+  key = file1[0][key_index]
   if key.int?
     # Treat the key as an integer.
     file1.sort_by! { |a| a[key_index].to_i }
@@ -93,16 +121,17 @@ end
 # (int or float). Output is sorted on join key.
 def merge_join(key_index, file1, file2)
   # Sorting part.
-  merge_sorter(file1[0][key_index], file1, file2)
+  merge_sorter(key_index, file1, file2)
   # Merging part.
   r = file1[i = 0]
   q = file2[j = 0]
   while i != file1.length && j != file2.length
-    if r[key_index] > q[key_index]
+    if is_greater_than(r[key_index], q[key_index])
       q = file2[j += 1]
-    elsif r[key_index] < q[key_index]
+    elsif is_less_than(r[key_index], q[key_index])
       r = file1[i += 1]
-    else # The records match on the join key.
+    else
+      # The records match on the join key.
       puts "#{r[key_index]} #{r.reject \
         { |e| e == r[key_index] }.to_csv.chomp} #{q.reject \
         { |e| e == r[key_index] }.to_csv.chomp}" \
