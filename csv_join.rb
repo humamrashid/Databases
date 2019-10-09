@@ -37,7 +37,7 @@ end
 
 # Checks if a string field value is less than another
 # according to type represented (string, int or float).
-def is_less_than(val1, val2)
+def less_than?(val1, val2)
   if val1.int?
     val1.to_i < val2.to_i
   elsif val1.float?
@@ -49,7 +49,7 @@ end
 
 # Checks if a string field value is greater than another
 # according to type represented (string, int or float).
-def is_greater_than(val1, val2)
+def greater_than?(val1, val2)
   if val1.int?
     val1.to_i > val2.to_i
   elsif val1.float?
@@ -126,9 +126,9 @@ def merge_join(key_index, file1, file2)
   r = file1[i = 0]
   q = file2[j = 0]
   while i != file1.length && j != file2.length
-    if is_greater_than(r[key_index], q[key_index])
+    if greater_than?(r[key_index], q[key_index])
       q = file2[j += 1]
-    elsif is_less_than(r[key_index], q[key_index])
+    elsif less_than?(r[key_index], q[key_index])
       r = file1[i += 1]
     else
       # The records match on the join key.
