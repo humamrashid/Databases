@@ -24,7 +24,7 @@
 require 'csv'
 
 # Adding methods to String class to check if a String value
-# is representing and integer or float.
+# is representing an integer or float.
 class String
   def int?
     Integer(self) && true rescue false
