@@ -500,4 +500,211 @@ for (all records in tableA) {
 -- Allows for ordering data in a database to get summaries, running totals, etc.
 -- Look at notes for analytical functions on website.
 
+-- ##### Day 7 #####
+
+-- Mid-term review.
+
+-- SQL: Structured Query Language.
+-- DDL: Data Definition Language.
+create table customer(
+    custid bigint,
+    name varchar(100),
+    email varchar(100)
+    street varchar(100),
+    city varchar(100),
+    zip varchar(10)
+);
+create table purchase(
+    purchid bigint,
+    custid bigint,
+    tim timestamp
+);
+-- drop table customer;
+-- DML: Data Manipulation Language.
+-- CRUD: create, retrieve, update delete.
+-- insert into customer(custid, name) values(1, 'bob');
+-- select * from customer where custid=1;
+-- update customer set name='bill' where custid=1;
+-- delete from customer where custid=1;
+
+-- CTAS: create table as
+create table gmail as
+    select *
+    from customer
+    -- e.g., bob@GMAIL.com
+    where lower(email) like '%gmail.com';
+
+-- get all purchases for custid=235 on Oct. 23rd, 2019.
+select ...
+from purchase
+where custid=235 and tim >=cast('2019-10-23' as date)
+and tim <to_date('10-24-2019', 'MM/DD/YYYY')
+
+-- cast('2019-10-23' as date) is the same as: '2019-10-23'::date
+create table purchase
+    purchid bigint,
+    custid bigint,
+
+-- aggregate functions.
+select count(*)
+from customer where email like '%gmail.com'
+
+--- what percentage of our customers have a gmail address?
+select 100.0 * sum(case when email like '%gmail.com' then 1 else 0 end) / sum(1.0) as prcnt...
+
+select state, count(*)
+from customer
+group by state;
+
+-- count customers by state, only output if > 1000
+select state, count(*)
+from customer
+group by state
+having count(*) > 1000;
+
+-- count customers by state, only count if state has over 1000 gmail users
+select state, count(*)
+from customer
+group by state
+having sum(case when email like '%gmail.com' then 1 else 0 end) > 1000;
+
+--- CTEs: common table expressions
+-- count customers by email domain, return records with > 1000 counts.
+select a.*,
+    substring(email, position('@' in email), 100) as domain, count(*)
+from customer a
+group by substr(email, position('@' in email),100)
+having count(*) > 1000
+
+-- cleaner using CTEs:
+with custdomain as (
+    select a.*,
+        substr(email, position('@' in email), 100) as domain, count(*)
+    from customer a
+)
+select domain, count(*)
+from custdomain
+group by domain
+having count(*) > 1000
+order by domain
+
+-- Joins:
+create table purchase_detail (
+    purchid bigint,
+    productid bigint,
+    qty int,
+);
+
+create table product (
+    productid bigint,
+    name varchar(100),
+    listprice decimal(18, 8)
+);
+
+-- name and address of customers who purchased a product named "TV";
+
+select distinct d.name, d.street, d.city, d.state, d.zip
+from product a
+    inner join purchase_detail b
+    on a.productid=b.productid
+    inner join purchase c
+    on b.purchid=c.purchid
+    on inner join customer d
+    on c.custid=d.custid
+where a.name='TV'
+
+-- inner join
+
+select ...
+from customer a
+    inner join purchase b
+    on a.custid=b.custid;
+
+-- same as:
+select a.custid, b.custid, b.tim
+from customer a
+    natural inner join purchase -- because both tables have custid
+
+-- left outer join
+-- names of customers who've never purchased anything.
+select ...
+from customer a
+ left outer join purchase b
+ on a.custid=b.custid
+where b.custid is null
+
+-- full outer join
+-- natural ... (all the above)
+
+-- Indexes
+
+-- clustered vs not
+-- btree indexes: b+trees store at the leaves, btrees store at the node.
+-- bitmap indexes
+
+-- Analytic/Windowing functions.
+
+-- assign a sequence number to purchases
+-- so all purchases for each customer are numberd 1 to N.
+select a.*
+    row_number() over (partition by custid order by tim) seq
+from purchase a
+
+-- find the last purchase record for each customer.
+with purchseq as (
+    select a.*
+        row_number() over (partition by custid order by tim) seq
+    from purchase a
+)
+select *
+from purchseq
+where seq=1;
+
+-- without analytics (doesn't work).
+
+with purchseq as (
+    select custid,max(tim) maxtim
+    from purchase a
+    group by custid
+)
+select *
+from purchase a
+    inner join purchseq b
+    on a.custid=b.custid and a.tim>=b.maxtim;
+
+-- Example from hw #5 (CTS)
+CTS: consolidated trade summary
+tdate,symbol,close
+-- figure out the difference percentage gained or lost for every day.
+with nextclose as (
+    select tdate,symbol,close
+        lead(close) over (partition by symbol order by tdate) nextclose
+    from cts
+)
+select tdate,symbol, (nextclose/close)-1 * 100.0
+from nextclose
+
+-- e.g.
+--close=100
+--nextclose=103
+-- (103/100-1) * 100.0
+-- 1.03 - 1 = 0.03
+-- 0.03 * 100 = 3%
+
+-- aggregate functions.
+    sum(...)
+    product? Not available.
+
+-- what's the return for symbol IBM between 2010-01-01 and 2012-01-01
+with gainlass as (
+    select tdate,symbol,((nextclose/close)-1)*100.0 as prcnt
+    from nextclose
+)
+select symbol, 1000 * exp(sum(log(1+prcnt/100.0))):-- 1000 is original investment.
+from gainloss
+where symbol='IBM' and
+tdate between '2010-01-01' and '2012-01-01'
+
+-- last term's mid-term available at: theparticle.com/cs/bc/dbsys/midterm20190402.pdf
+
 -- EOF.
