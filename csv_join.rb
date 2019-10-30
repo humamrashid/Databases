@@ -5,9 +5,11 @@
 # csv_join: A join implementation for CSV files.
 # Assumes both CSV files have same number of fields per
 # record and the join key is at the same position in each
-# record. This implementation essentially follows a
-# rudimentary version of the UNIX join utility specific to
-# CSV files.
+# record (if it exists). This implementation essentially
+# a rudimentary version of the UNIX join utility specific to
+# CSV files. In keeping with the output of the UNIX join,
+# the join key is printed on the leftmost column but not in
+# the matched records.
 #
 # CLI arguments:
 #   1.) < -h | -m | -n >, for join implementation type
@@ -174,9 +176,6 @@ def nested_join(key_index, file1, file2)
         { |e| e == i[key_index] }.to_csv.chomp}" \
         if (!i[key_index].nil? && !j[key_index].nil?) \
           && (i[key_index] == j[key_index])
-      # Above checks to ensure that the join key is not
-      # included as part of the output records in keeping
-      # with the UNIX join utility's output.
     end
   end
 end

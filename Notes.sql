@@ -541,9 +541,14 @@ where custid=235 and tim >=cast('2019-10-23' as date)
 and tim <to_date('10-24-2019', 'MM/DD/YYYY')
 
 -- cast('2019-10-23' as date) is the same as: '2019-10-23'::date
-create table purchase
+
+create table purchase (
     purchid bigint,
     custid bigint,
+    .
+    .
+    .
+);
 
 -- aggregate functions.
 select count(*)
