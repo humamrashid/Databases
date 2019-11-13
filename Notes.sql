@@ -539,16 +539,7 @@ select ...
 from purchase
 where custid=235 and tim >=cast('2019-10-23' as date)
 and tim <to_date('10-24-2019', 'mm/dd/yyyy')
-
 -- cast('2019-10-23' as date) is the same as: '2019-10-23'::date
-
-create table purchase (
-    purchid bigint,
-    custid bigint,
-    .
-    .
-    .
-);
 
 -- aggregate functions.
 select count(*)
@@ -682,11 +673,11 @@ cts: consolidated trade summary
 tdate,symbol,close
 -- figure out the difference percentage gained or lost for every day.
 with nextclose as (
-    select tdate,symbol,close
+    select tdate,symbol,close,
         lead(close) over (partition by symbol order by tdate) nextclose
     from cts
 )
-select tdate,symbol, (nextclose/close)-1 * 100.0
+select tdate,symbol, ((nextclose/close)-1) * 100.0
 from nextclose
 
 -- e.g.
@@ -701,7 +692,7 @@ from nextclose
     product? not available.
 
 -- what's the return for symbol ibm between 2010-01-01 and 2012-01-01
-with gainlass as (
+with gainloss as (
     select tdate,symbol,((nextclose/close)-1)*100.0 as prcnt
     from nextclose
 )
@@ -711,5 +702,35 @@ where symbol='ibm' and
 tdate between '2010-01-01' and '2012-01-01'
 
 -- last term's mid-term available at: theparticle.com/cs/bc/dbsys/midterm20190402.pdf
+
+-- ##### day 8 #####
+-- Midterm.
+
+-- ##### day 9 #####
+
+-- Database Design.
+
+-- Nouns: things (objects and attributes of objects).
+-- Verbs: actions (things that happen to objects).
+
+Nouns(Customer, Product)
+Verbs(Purchase)
+
+Customer
+--------
+name
+emails
+address
+
+Product
+-------
+description
+price
+
+Purchase
+--------
+price
+
+-- See diagram and notes on notebook.
 
 -- eof.
