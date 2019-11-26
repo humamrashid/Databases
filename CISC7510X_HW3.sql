@@ -72,12 +72,30 @@ with flr42workers as (
     where doorid='7'
 )
 select 100.0 * ((select count(username) from flr42workers)
-                /
+               /
                (select count(username) from allworkers))
 
 -- question 8.
+select avg(count(eventid)) over (partition by tdate)
+from doorlog
+where doorid=2;
 
 -- question 9.
+with cameonday as (
+    select count(distinct username)
+    from doorlog
+    where event='E'
+        and (tim >'2017-07-03 00:00:00' and tim <'2017-07-03 17:15:00')
+)
+with leftafter (
+    select count(distinct username)
+    from doorlog
+    where event='X'
+        and (tim >'2017-07-03 17:15:00' and tim <'2017-07-04 00:00:00')
+)
+select 100.0 * ((select * from leftafter)
+               /
+               (select * from cameonday))
 
 -- question 10.
 with leftearly as (
@@ -86,9 +104,16 @@ with leftearly as (
     where event='X'
         and (tim >'2017-07-03 00:00:00' and tim <'2017-07-03 13:00:00')
 )
-select username
-from leftearly
-group by username
-having count(*)=1;
+with cameback (
+    select username
+    from doorlog
+    where event='E'
+        and (tim >'2017-07-03 13:00:00' and tim <'2017-07-04 00:00:00')
+)
+select distinct username
+from leftearly a
+    left outer join cameback b
+    on a.username=b.username
+where b.username is null;
 
 -- EOF.
