@@ -17,40 +17,40 @@ SELECT lname, fname, street1, street2, city, state, zip
 FROM customer
 WHERE customerid=42;
 
-/* Question 3. "Corrected" from H.W. #1 */
+/* Question 3. */
 SELECT a.* 
 FROM product a
-    INNER JOIN purchase b
+    LEFT OUTER JOIN purchase b
     ON a.productid=b.productid
 WHERE b.customerid=42;
 
-/* Question 4. "Corrected" from H.W. #1 */
+/* Question 4. */
 SELECT a.*
 FROM customer
-    INNER JOIN purchase b
+    LEFT OUTER JOIN purchase b
     ON a.customerid=b.customerid
 WHERE b.productid=24;
 
-/* Question 5. "Corrected" from H.W. #1 */
+/* Question 5. */
 SELECT a.lname, a.fname
 FROM customer a
     LEFT OUTER JOIN purchase b
     ON a.customerid=b.customerid
 WHERE b.purchaseid IS NULL;
 
-/* Question 6. "Corrected" from H.W. #1 */
+/* Question 6. */
 SELECT a.description
 FROM product a
     LEFT OUTER JOIN purchase b
     ON a.productid=b.productid
 WHERE b.purchaseid IS NULL;
 
-/* Question 7. "Corrected" from H.W. #1 */
+/* Question 7. */
 SELECT c.*
 FROM customer a
-    INNER JOIN purchase b
+    LEFT OUTER JOIN purchase b
     ON a.customerid=b.customerid
-    INNER JOIN product c
+    LEFT OUTER JOIN product c
     ON b.productid=c.productid
 WHERE a.zip='10001';
 
@@ -58,25 +58,25 @@ WHERE a.zip='10001';
 WITH customers_distinct AS (
     SELECT DISTINCT a.customerid
     FROM customer a
-        INNER JOIN purchase b
+        LEFT OUTER JOIN purchase b
         ON a.customerid=b.customerid;
 )
 SELECT 100.0 * SUM(CASE WHEN d.productid=42 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
 FROM customers_distinct c
-    INNER JOIN purchase d
+    LEFT OUTER JOIN purchase d
     ON c.customerid=d.customerid;
 
 /* Question 9. */
 WITH buyers42 AS (
     SELECT a.*
     FROM customer a
-        INNER JOIN purchase b
+        LEFT OUTER JOIN purchase b
         ON a.customerid=b.customerid
     WHERE b.productid=42;
 )
 SELECT 100.0 * SUM(CASE WHEN d.productid=24 THEN 1.0 ELSE 0.0 END) / SUM(1.0)
 FROM buyers_42 c
-    INNER JOIN purchase d
+    LEFT OUTER JOIN purchase d
     ON c.customerid=d.customerid;
 
 /* Question 10. */
@@ -102,7 +102,7 @@ LIMIT 1;
 /* Question 12. */
 SELECT a.*
 FROM customers a
-    INNER JOIN purchase b
+    LEFT OUTER JOIN purchase b
     ON a.customerid=b.customerid
 WHERE productid=24 AND purhcasetimestamp <'2019-07-04';
 
