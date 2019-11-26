@@ -16,7 +16,7 @@ puts "create table doorlog(
   doorid varchar(6),
   tim varchar(8),
   username varchar(20),
-  even char(1)
+  event char(1)
 );"
 
 (0..10000).each do |i|
