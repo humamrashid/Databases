@@ -4,8 +4,7 @@
 # postgresql database.
 
 def entry_or_exit
-  x = rand(0..1)
-  if x == 0
+  if rand(0..1) == 1
     return 'E'
   else
     return 'X'
