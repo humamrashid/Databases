@@ -54,6 +54,12 @@ where (doorid=7 and (event='E' or event='X'))
     and tim between '2017-01-01' and '2017-12-31';
 
 -- question 6.
+select
+    avg(count(eventid)) over (partition by tdate order by tdate),
+    stddev(count(eventid)) over (partition by tdate order by tdate)
+from doorlog
+where (doorid=7 and (event='E' or event='X'))
+    and tim between '2017-01-01' and '2017-12-31';
 
 -- question 7.
 
