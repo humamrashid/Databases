@@ -62,6 +62,18 @@ where (doorid=7 and (event='E' or event='X'))
     and tim between '2017-01-01' and '2017-12-31';
 
 -- question 7.
+with allworkers as (
+    select distinct username
+    from doorlog
+)
+with flr42workers as (
+    select distinct username
+    from doorlog
+    where doorid='7'
+)
+select 100.0 * ((select count(username) from flr42workers)
+                /
+               (select count(username) from allworkers))
 
 -- question 8.
 
