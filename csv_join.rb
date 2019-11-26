@@ -5,7 +5,7 @@
 # csv_join: A join implementation for CSV files.
 # Assumes both CSV files have same number of fields per
 # record and the join key is at the same position in each
-# record (if it exists). This implementation essentially
+# record (if it exists). This implementation is essentially
 # a rudimentary version of the UNIX join utility specific to
 # CSV files. In keeping with the output of the UNIX join,
 # the join key is printed on the leftmost column but not in
