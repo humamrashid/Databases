@@ -1,53 +1,53 @@
-/* Question 1. */
-SELECT COUNT(*)
-FROM doorlog
-WHERE doorid=1 AND event='E';
+/* question 1. */
+select count(*)
+from doorlog
+where doorid=1 and event='e';
 
-/* Question 2. */
-SELECT (SELECT COUNT(eventid)
-        FROM doorlog WHERE doorid=2 AND event='E')
+/* question 2. */
+select (select count(eventid)
+        from doorlog where doorid=2 and event='e')
         -
-       (SELECT COUNT(eventid)
-        FROM doorlog WHERE doorid=2 AND event='X');
+       (select count(eventid)
+        from doorlog where doorid=2 and event='x');
 
-/* Question 3. */
-SELECT (SELECT COUNT(eventid)
-        FROM doorlog WHERE event='E' AND (doorid='1' OR doorid='3'))
+/* question 3. */
+select (select count(eventid)
+        from doorlog where event='e' and (doorid='1' or doorid='3'))
         -
-       (SELECT COUNT(eventid)
-        FROM doorlog WHERE event='X' AND (doorid='1' OR doorid='3'))
+       (select count(eventid)
+        from doorlog where event='x' and (doorid='1' or doorid='3'))
         
-/* Question 4. */
-WITH in_buildin0704 AS (
-    SELECT username FROM doorlog
-    WHERE
-        ((doorid=1 OR doorid=3) AND event='E')
-        AND tim <'2019-07-04 22:00:00'
-    EXCEPT
-    SELECT username FROM doorlog
-    WHERE
-        ((doorid=1 OR doorid=3) AND event='X')
-        AND tim >'2019-07-04 22:00:00'
+/* question 4. */
+with in_buildin0704 as (
+    select username from doorlog
+    where
+        ((doorid=1 or doorid=3) and event='e')
+        and tim <'2019-07-04 22:00:00'
+    except
+    select username from doorlog
+    where
+        ((doorid=1 or doorid=3) and event='x')
+        and tim >'2019-07-04 22:00:00'
 )
-SELECT COUNT(*)
-FROM in_building0704;
+select count(*)
+from in_building0704;
 
-/* Question 5. */
-WITH perday AS (
-    SELECT eventid FROM doorlog
-    WHERE
-        (doorid=7 AND event='E')
-        AND
+/* question 5. */
+with perday as (
+    select eventid from doorlog
+    where
+        (doorid=7 and event='e')
+        and
 
-/* Question 6. */
+/* question 6. */
 
-/* Question 7. */
+/* question 7. */
 
-/* Question 8. */
+/* question 8. */
 
-/* Question 9. */
+/* question 9. */
 
-/* Question 10. */
-SELECT username
-FROM doorlog
-WHERE event='X' AND tim <'2017-07-03 13:00:00';
+/* question 10. */
+select username
+from doorlog
+where event='x' and tim <'2017-07-03 13:00:00';
