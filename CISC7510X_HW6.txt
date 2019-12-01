@@ -18,29 +18,29 @@ junkyard-specific use case:
 
 Transactions
 ------------
-customer(
-        customerid bigint,
-        name       varchar,
-        address    varchar,
-        phone1     varchar,
-        phone2     varchar,
-        email      varchar
-)
-purchase(
-        purchaseid bigint,
-        customerid bigint,
-        ptime      timestamp
-)
-purchase_detail(
-               purchaseid bigint,
-               partid,    bigint,
-               quantity   bigint,
-)
+create table customer(
+    customerid bigint,
+    name       varchar(100),
+    address    varchar(100),
+    phone1     varchar(20),
+    phone2     varchar(20),
+    email      varchar(100)
+);
+create table purchase(
+    purchaseid bigint,
+    customerid bigint,
+    ptime      timestamp
+);
+create table purchase_detail(
+    purchaseid bigint,
+    partid,    bigint,
+    quantity   bigint,
+);
 price_history(
-             partid bigint,
-             price  numeric,
-             prtime timestamp
-)
+    partid bigint,
+    price  numeric (8,2),
+    prtime timestamp
+);
 
 The purposes of the above tables were discussed at length in class so I am not
 repeating them here. The table 'products' is left out above in contrast to the
@@ -54,38 +54,38 @@ a junkyard business:
 Search & Inventory Management
 -----------------------------
 automobile(
-          autoid bigint,
-          make   varchar,
-          body   varchar,
-          model  varchar,
-          year   bigint,
-          color  varchar
-)
+    autoid bigint,
+    color  varchar(100),
+    model  varchar(100),
+    make   varchar(100),
+    body   varchar(100),
+    year   bigint
+);
 parts(
      autoid    bigint,
      partid    bigint,
      modid     bigint,
-     partdesc  varchar,
-     partprice numeric,
+     partdesc  varchar(500),
+     partprice numeric(8,2),
      quantity  bigint
-)
+);
 compatible(
-          partid bigint,
-          autoid bigint,
-          moded  boolean
-)
+    partid bigint,
+    autoid bigint,
+    moded  boolean
+);
 location(
-        localeid bigint,
-        street   varchar,
-        city     varchar,
-        county   varchar,
-        postal   varchar,
-        country  varchar
-        phone    varchar,
-        email    varchar,
-        link     varchar,
-        partid   bigint
-)
+    localeid bigint,
+    partid   bigint,
+    street   varchar(20),
+    city     varchar(20),
+    county   varchar(20),
+    postal   varchar(10),
+    country  varchar(20),
+    phone    varchar(20),
+    email    varchar(100),
+    link     varchar(100)
+);
 
 The following is the schema of a limited set of services/processing work that
 might be performed in a typical junkyard:
@@ -93,26 +93,26 @@ might be performed in a typical junkyard:
 Services & Processing Management
 --------------------------------
 modification(
-            modid    bigint,
-            partid   bigint,
-            original varchar,
-            current  varchar
-)
+    modid    bigint,
+    partid   bigint,
+    original varchar(100),
+    current  varchar(100)
+);
 mod_history(
-           partid  bigint,
-           moddesc varchar,
-           mtime   timestamp
-)
+    partid  bigint,
+    moddesc varchar(500),
+    mtime   timestamp
+);
 waiting_list(
-            customerid bigint,
-            partid     bigint,
-            quantity   bigint
-)
+    customerid bigint,
+    partid     bigint,
+    quantity   bigint
+);
 delivery(
-        deilveryid bigint,
-        purchaseid bigint,
-        localeid   bigint,
-        dtime      timestamp
-)
+    deilveryid bigint,
+    purchaseid bigint,
+    localeid   bigint,
+    dtime      timestamp
+);
 
 # EOF.
