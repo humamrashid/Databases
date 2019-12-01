@@ -57,11 +57,19 @@ Search & Inventory Management
 create table automobile(
     autoid bigint,
     color  varchar(100),
-    model  varchar(100),
     make   varchar(100),
+    model  varchar(100),
     body   varchar(100),
-    year   bigint
+    year   integer
 );
+
+The 'automobile' table catalogs specific car types that have ever been brought
+into the junkyard or expected to be (see 'waiting_list' below). An entry is
+added to this table as soon as a new car is brought in or a customer indicates
+that he/she is interested in parts for the specific car type. A typical insert
+may look like `insert into automobile values(000001, "Black", "Honda", "Accord",
+"Sedan", 2019)`.
+
 create table parts(
      autoid    bigint,
      partid    bigint,
@@ -70,6 +78,9 @@ create table parts(
      partprice numeric(8,2),
      quantity  bigint
 );
+
+The 'parts' table catalogs specific parts relative to a specific car type 
+
 create table compatible(
     partid bigint,
     autoid bigint,
