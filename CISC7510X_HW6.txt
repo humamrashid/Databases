@@ -12,35 +12,34 @@ inventory systems (e.g., online bookstores) work. Due to this, my design is an
 amalgamation of the online store DB design discussed in class along with
 management requirements for junkyard automobile parts.
 
-The following is the schema for the transactions part of section inventory
-system based directly on the design discussed in class, fitted for the
-junkyard-specific terminology. Both sets of schema are interlinked and part of
-the same design, I'm just separating what I pilfered from class notes (with
-adjustments) and what I came up with myself.
+The following is the schema for the transactions section of section inventory
+system and is based directly on the design discussed in class, adjusted for the
+junkyard-specific use case:
 
 Transactions
 ------------
 customer(
-        customerid int,
+        customerid bigint,
         name       varchar,
         address    varchar,
         phone1     varchar,
         phone2     varchar,
-        emai       varchar
+        email      varchar
 )
 purchase(
-        purchaseid int,
-        customerid int,
+        purchaseid bigint,
+        customerid bigint,
         ptime      timestamp
 )
 purchase_detail(
-               purchaseid int,
-               partid,    int
-               quantity   int
+               purchaseid bigint,
+               partid,    bigint,
+               quantity   bigint,
 )
 price_history(
-             partid int,
-             price  numeric
+             partid bigint,
+             price  numeric,
+             prtime timestamp
 )
 
 The purposes of the above tables were discussed at length in class so I am not
@@ -49,48 +48,66 @@ class notes and instead replaced with 'parts' since products in the junkyard are
 of a specific variety. It is mentioned separately with the search & inventory
 management section of the system. 
 
+The following is the schema for the inventory tracking and search facilities of
+a junkyard business:
+
 Search & Inventory Management
 -----------------------------
 automobile(
-          autoid int,
+          autoid bigint,
           make   varchar,
           body   varchar,
           model  varchar,
-          year   int,
-          color  varchar,
-          partid int
+          year   bigint,
+          color  varchar
 )
 parts(
-     autoid    int,
-     partid    int,
+     autoid    bigint,
+     partid    bigint,
+     modid     bigint,
      partdesc  varchar,
      partprice numeric,
-     quantity  int
+     quantity  bigint
 )
 compatible(
-          partid int,
-          autoid int
-          custom boolean
+          partid bigint,
+          autoid bigint,
+          moded  boolean
 )
 location(
-        localeid int,
+        localeid bigint,
         street   varchar,
         city     varchar,
         county   varchar,
         postal   varchar,
         country  varchar
-        partid   int
+        phone    varchar,
+        email    varchar,
+        link     varchar,
+        partid   bigint
 )
+
+The following is the schema of a limited set of services/processing work that
+might be performed in a typical junkyard:
 
 Services & Processing Management
 --------------------------------
-customize(
-         partid   int,
-         original varchar,
-         current  varchar,
-         ctime    timestamp
+modification(
+            modid    bigint,
+            partid   bigint,
+            original varchar,
+            current  varchar
 )
-orders()
-delivery()
+mod_history(
+           partid  bigint,
+           moddesc varchar,
+           mtime   timestamp
+)
+delivery(
+        deilveryid bigint,
+        purchaseid bigint,
+        localeid   bigint,
+        dtime      timestamp
+)
 
 # EOF.
