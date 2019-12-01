@@ -37,7 +37,7 @@ create table purchase_detail(
     partid,    bigint,
     quantity   bigint
 );
-price_history(
+create table price_history(
     partid bigint,
     price  numeric(8,2),
     prtime timestamp
@@ -54,7 +54,7 @@ a junkyard business:
 
 Search & Inventory Management
 -----------------------------
-automobile(
+create table automobile(
     autoid bigint,
     color  varchar(100),
     model  varchar(100),
@@ -62,7 +62,7 @@ automobile(
     body   varchar(100),
     year   bigint
 );
-parts(
+create table parts(
      autoid    bigint,
      partid    bigint,
      modid     bigint,
@@ -70,12 +70,12 @@ parts(
      partprice numeric(8,2),
      quantity  bigint
 );
-compatible(
+create table compatible(
     partid bigint,
     autoid bigint,
     moded  boolean
 );
-location(
+create table location(
     localeid bigint,
     partid   bigint,
     street   varchar(20),
@@ -93,23 +93,23 @@ might be performed in a typical junkyard:
 
 Services & Processing Management
 --------------------------------
-modification(
+create table modification(
     modid    bigint,
     partid   bigint,
     original varchar(100),
     current  varchar(100)
 );
-mod_history(
+create table mod_history(
     partid  bigint,
     moddesc varchar(500),
     mtime   timestamp
 );
-waiting_list(
+create table waiting_list(
     customerid bigint,
     partid     bigint,
     quantity   bigint
 );
-delivery(
+create table delivery(
     deilveryid bigint,
     purchaseid bigint,
     localeid   bigint,
