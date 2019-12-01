@@ -1,0 +1,96 @@
+# Humam Rashid
+# CISC 7510X, Fall 2019.
+
+Inventory System for Automobile Junkyard
+----------------------------------------
+
+In attempting to design the inventory system, I wasn't sure if the requirements
+were limited to search data only (i.e., data on the available parts only) or the
+entire process of searching, buying, etc. To be safe, I assumed that more or
+less the entire process is required based on my understanding of how typical
+inventory systems (e.g., online bookstores) work. Due to this, my design is an
+amalgamation of the online store DB design discussed in class along with
+management requirements for junkyard automobile parts.
+
+The following is the schema for the transactions part of section inventory
+system based directly on the design discussed in class, fitted for the
+junkyard-specific terminology. Both sets of schema are interlinked and part of
+the same design, I'm just separating what I pilfered from class notes (with
+adjustments) and what I came up with myself.
+
+Transactions
+------------
+customer(
+        customerid int,
+        name       varchar,
+        address    varchar,
+        phone1     varchar,
+        phone2     varchar,
+        emai       varchar
+)
+purchase(
+        purchaseid int,
+        customerid int,
+        ptime      timestamp
+)
+purchase_detail(
+               purchaseid int,
+               partid,    int
+               quantity   int
+)
+price_history(
+             partid int,
+             price  numeric
+)
+
+The purposes of the above tables were discussed at length in class so I am not
+repeating them here. The table 'products' is left out above in contrast to the
+class notes and instead replaced with 'parts' since products in the junkyard are
+of a specific variety. It is mentioned separately with the search & inventory
+management section of the system. 
+
+Search & Inventory Management
+-----------------------------
+automobile(
+          autoid int,
+          make   varchar,
+          body   varchar,
+          model  varchar,
+          year   int,
+          color  varchar,
+          partid int
+)
+parts(
+     autoid    int,
+     partid    int,
+     partdesc  varchar,
+     partprice numeric,
+     quantity  int
+)
+compatible(
+          partid int,
+          autoid int
+          custom boolean
+)
+location(
+        localeid int,
+        street   varchar,
+        city     varchar,
+        county   varchar,
+        postal   varchar,
+        country  varchar
+        partid   int
+)
+
+Services & Processing Management
+--------------------------------
+customize(
+         partid   int,
+         original varchar,
+         current  varchar,
+         ctime    timestamp
+)
+orders()
+delivery()
+
+# EOF.
