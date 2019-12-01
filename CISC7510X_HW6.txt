@@ -10,7 +10,8 @@ entire process of searching, buying, etc. To be safe, I assumed that more or
 less the entire process is required based on my understanding of how typical
 inventory systems (e.g., online bookstores) work. Due to this, my design is an
 amalgamation of the online store DB design discussed in class along with
-management requirements for junkyard automobile parts.
+management requirements for junkyard automobile parts. The schema are divided
+into sections for ease of reading but its meant to be all in one database.
 
 The following is the schema for the transactions section of section inventory
 system and is based directly on the design discussed in class, adjusted for the
@@ -34,11 +35,11 @@ create table purchase(
 create table purchase_detail(
     purchaseid bigint,
     partid,    bigint,
-    quantity   bigint,
+    quantity   bigint
 );
 price_history(
     partid bigint,
-    price  numeric (8,2),
+    price  numeric(8,2),
     prtime timestamp
 );
 
