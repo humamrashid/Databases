@@ -103,6 +103,11 @@ mod_history(
            moddesc varchar,
            mtime   timestamp
 )
+waiting_list(
+            customerid bigint,
+            partid     bigint,
+            quantity   bigint
+)
 delivery(
         deilveryid bigint,
         purchaseid bigint,
