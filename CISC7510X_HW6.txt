@@ -35,7 +35,8 @@ create table purchase(
 create table purchase_detail(
     purchasedetailid bigint       not null,
     purchaseid       bigint       not null,
-    serialnum        varchar(100) not null
+    serialnum        varchar(100) not null,
+    deliveryid       bigint
 );
 create table price_history(
     pricehistoryid bigint       not null,
