@@ -102,7 +102,7 @@ create table part_detail(
     partid    bigint,
     serialnum varchar(100)
 )
-The 'part_detail' table catalogs and tracks each individual part that is
+The 'part_detail' table catalogs and tracks each individual part that is/was
 available at any junkyard. No two parts being inventoried can share a
 'serialnum' even if they are of the same type and origin. This table is filled
 automatically whenever a new part becomes available anywhere in the system and
