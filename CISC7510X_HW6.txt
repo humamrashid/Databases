@@ -87,15 +87,31 @@ specific part ('quatity' would still be zero in this case). The 'modid' field
 indicates if it is a modified part or not (could be null). 'partprice' is the
 latest price (last value of 'price' from 'price_history' table). The 'quantity'
 field of course indicates the number of such parts available. The 'partdesc'
-field indicates name and type (e.g., engine, gas tank, left-side mirror, etc.).
-A typical insert may look like `insert into parts values(000001, 000001, null,
-"brakes", 20.00, 2)`.
+field indicates name and type with any additional info. (e.g., engine, gas tank,
+cracked left-side mirror, etc.). A typical insert may look like `insert into
+parts values(000001, 000001, null, "brakes", 20.00, 2)`.
 
 create table compatible(
-    partid bigint,
-    autoid bigint,
+    partid bigint not null,
+    autoid bigint not null,
     moded  boolean
 );
+
+The 'compatible' table catalogs which entries in the 'parts' table is compatible
+with which entries in the 'automobile' table. It is expected that certain parts
+from some car model for instance, could be compatible with other models as well.
+So brakes from a Black Honda Accord could possibly be used with many other
+sedans regardless of color or model. The 'moded' field indicates if a
+modification is required to make it compatible (i.e., true = modification
+required); it is possibly null because modification depends on what the specific
+junkyard and its technicians are capable of and willing to do and may change
+over time. The other fields cannot be null and at least one entry is required
+for each part, so at least one entry is created for this table as soon as an
+entry is added to the 'parts' table. A typical insert may look like `insert into
+compatible values(000001, 000001, null)`. Another entry for part 000001 but with
+a different 'autoid' indicates that this part is also compatible with this type
+of car.
+
 create table location(
     localeid bigint,
     partid   bigint,
