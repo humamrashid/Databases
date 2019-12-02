@@ -33,8 +33,8 @@ create table purchase(
     ptime      timestamp not null
 );
 create table purchase_detail(
-    purchasedetailid bigint not   null,
-    purchaseid       bigint not   null,
+    purchasedetailid bigint       not null,
+    purchaseid       bigint       not null,
     serialnum        varchar(100) not null
 );
 create table price_history(
@@ -79,9 +79,8 @@ added to this table as soon as a new car or part is brought in or a customer
 indicates that he/she is interested in parts for the specific car type. A
 typical insert may look like `insert into automobile values(000001, "Black",
 "Honda", "Accord", "Sedan", 2019)`. Since all junkyards using this software are
-linked through it, any specific junkyard is expected to have many car types
-cataloged in 'automobile' table for which no parts may exist in the specific
-shop.
+linked through it, it is likely that not all junkyards would have parts
+available for every car cataloged in 'automobile' table.
 
 create table parts(
     partid    bigint       not null,
@@ -94,9 +93,9 @@ that have ever been brought into a junkyard. An entry is added to this table as
 soon as a new part is available (e.g., when a new car is brought in and
 scrapped). The 'partdesc' field indicates name and type with any additional
 info. (e.g., engine, gas tank, left-side mirror, etc.) that is true for all
-parts of this type. The 'quantity' field of course indicates the number of such
-parts available. A typical insert may look like `insert into parts
-values(000001, 000001, 2, "Brakes")`.
+parts of this type and car. The 'quantity' field of course indicates the number
+of such parts available. A typical insert may look like `insert into parts
+values(000001, 000001, "Brakes", 2)`.
 
 create table part_detail(
     partdetailid bigint        not null,
@@ -116,12 +115,12 @@ tracking of specific individual parts rather than the type of part. A different
 part of the same type would have the same 'partid' but a different 'serialnum'.
 The 'modid' field indicates whether it is a modified part or not (could be null,
 indicating unmodified). The 'condition' field is used for terms like used and
-new and the related 'detaildesc' describes specifics of the individual part such
+new and the related 'detaildesc' describes details of the individual part such
 as "broken", "malfunctioning", etc. The 'partprice' is the latest price (last
 value of 'price' from 'price_history' table) and 'localeid' indicates the
 junkyard where it is available. A typical insert may look like `insert into
-part_detail values(000001, "PSN123456-7890", null, "Used", "No issues", 20.00,
-000018)`.
+part_detail values(000050, 000001, "PSN123456-7890", null, "Used", "No issues",
+20.00, 000018)`.
 
 create table compatible(
     compatibleid bigint   not null,
@@ -142,8 +141,8 @@ over time. This is also part of why 'localeid' may be null, as well the
 possibility of the part not being available anywhere (anymore). The other fields
 cannot be null and at least one entry is required for each part, so at least one
 entry is created for this table as soon as an entry is added to the 'parts'
-table. A typical insert may look like `insert into compatible values(000001,
-000001, null, null)`. Another entry for part 000001 but with a different
+table. A typical insert may look like `insert into compatible values(987654,
+000001, 000009, null, null)`. Another entry for part 000009 but with a different
 'autoid' indicates that this part is also compatible with this type of car.
 
 create table location(
