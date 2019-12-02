@@ -70,7 +70,8 @@ indicates that he/she is interested in parts for the specific car type. A
 typical insert may look like `insert into automobile values(000001, "Black",
 "Honda", "Accord", "Sedan", 2019)`. Since all junkyards using this software are
 linked through it, any specific junkyard is expected to have many car types
-cataloged in 'automobile' table for which no parts may exist in a specific shop.
+cataloged in 'automobile' table for which no parts may exist in the specific
+shop.
 
 create table parts(
      autoid    bigint       not null,
@@ -96,25 +97,27 @@ parts values(000001, 000001, null, "brakes", 20.00, 2, 000018)`. A 'localeid' is
 needed only when it becomes available in a particular junkyard.
 
 create table compatible(
-    partid bigint not null,
-    autoid bigint not null,
-    moded  boolean
+    partid   bigint not null,
+    autoid   bigint not null,
+    moded    boolean,
+    localeid bigint
 );
 
 The 'compatible' table catalogs which entries in the 'parts' table is compatible
 with which entries in the 'automobile' table. It is expected that certain parts
 from some car model for instance, could be compatible with other models as well.
 So brakes from a Black Honda Accord could possibly be used with many other
-sedans regardless of color or model. The 'moded' field indicates if a
-modification is required to make it compatible (i.e., true = modification
+sedans regardless of color or model. The 'moded' field indicates whether a
+modification is required to make it compatible (i.e., true -> modification
 required); it is possibly null because modification depends on what the specific
-junkyard and its technicians are capable of and willing to do and may change
-over time. The other fields cannot be null and at least one entry is required
-for each part, so at least one entry is created for this table as soon as an
-entry is added to the 'parts' table. A typical insert may look like `insert into
-compatible values(000001, 000001, null)`. Another entry for part 000001 but with
-a different 'autoid' indicates that this part is also compatible with this type
-of car.
+junkyard and its technicians are capable of and willing to do, and may change
+over time. This is also part of why 'localeid' may be null, as well the
+possibility of the part not being available anywhere (anymore). The other fields
+cannot be null and at least one entry is required for each part, so at least one
+entry is created for this table as soon as an entry is added to the 'parts'
+table. A typical insert may look like `insert into compatible values(000001,
+000001, null)`. Another entry for part 000001 but with a different 'autoid'
+indicates that this part is also compatible with this type of car.
 
 create table location(
     localeid bigint,
