@@ -175,14 +175,21 @@ might be performed in a typical junkyard:
 Services & Processing Management
 --------------------------------
 create table modification(
-    modid    bigint,
-    partid   bigint,
-    original varchar(100),
-    current  varchar(100)
+    modid     bigint        not null,
+    serialnum bigint        not null,
+    original  varchar(500), not null,
+    current   varchar(500)  not null
 );
 The 'modification' table catalogs parts that have been modified. This is used to
-keep track of original modified parts and parts in their original condition, as
-well as to locate where a certain modified part is available.
+keep track of modified parts and parts in their original condition. It is also
+used to locate where a certain modified part is available (using the 'serialnum'
+field). The existence of a en entry in this table (and hence a 'modid') for a
+specific part indicates that this specific part (and not all parts of this type)
+has been modified. The 'original' and 'current' fields indicate the original and
+latest modified status of the specific part, respectively. Note also that the
+'current' field is the latest value of the 'moddesc' field in 'mod_history'
+table. A typcial insert may look like `insert into modification values(002558,
+"PSN123656-9730", "black left-side mirror", "repainted silver")`.
 
 create table mod_history(
     modhistoryid bigint        not null,
