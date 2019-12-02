@@ -20,27 +20,27 @@ junkyard-specific use case:
 Transactions
 ------------
 create table customer(
-    customerid bigint,
-    name       varchar(100),
-    address    varchar(100),
-    phone1     varchar(20),
+    customerid bigint       not null,
+    name       varchar(100) not null,
+    address    varchar(100) not null,
+    phone1     varchar(20)  not null,
     phone2     varchar(20),
     email      varchar(100)
 );
 create table purchase(
-    purchaseid bigint,
-    customerid bigint,
-    ptime      timestamp
+    purchaseid bigint    not null,
+    customerid bigint    not null,
+    ptime      timestamp not null
 );
 create table purchase_detail(
-    purchaseid bigint,
-    partid,    bigint,
-    quantity   bigint
+    purchaseid bigint not null,
+    partid,    bigint not null,
+    quantity   bigint not null
 );
 create table price_history(
-    partid bigint,
-    price  numeric(8,2),
-    prtime timestamp
+    partid bigint       not null,
+    price  numeric(8,2) not null,
+    prtime timestamp    not null
 );
 
 The purposes of the above tables were discussed at length in class so I am not
@@ -55,31 +55,41 @@ a junkyard business:
 Search & Inventory Management
 -----------------------------
 create table automobile(
-    autoid bigint,
-    color  varchar(100),
-    make   varchar(100),
-    model  varchar(100),
-    body   varchar(100),
-    year   integer
+    autoid bigint       not null,
+    color  varchar(100) not null,
+    make   varchar(100) not null,
+    model  varchar(100) not null,
+    body   varchar(100) not null,
+    year   integer      not null
 );
 
 The 'automobile' table catalogs specific car types that have ever been brought
 into the junkyard or expected to be (see 'waiting_list' below). An entry is
-added to this table as soon as a new car is brought in or a customer indicates
-that he/she is interested in parts for the specific car type. A typical insert
-may look like `insert into automobile values(000001, "Black", "Honda", "Accord",
-"Sedan", 2019)`.
+added to this table as soon as a new car or part is brought in or a customer
+indicates that he/she is interested in parts for the specific car type. A
+typical insert may look like `insert into automobile values(000001, "Black",
+"Honda", "Accord", "Sedan", 2019)`.
 
 create table parts(
-     autoid    bigint,
-     partid    bigint,
+     autoid    bigint       not null,
+     partid    bigint       not null,
      modid     bigint,
-     partdesc  varchar(500),
-     partprice numeric(8,2),
-     quantity  bigint
+     partdesc  varchar(500) not null,
+     partprice numeric(8,2) not null,
+     quantity  bigint       not null
 );
 
-The 'parts' table catalogs specific parts relative to a specific car type 
+The 'parts' table catalogs specific parts relative to a specific car type that
+have ever been brought into the junkyard or expected to be. An entry is added to
+this table as soon as a new part is available (e.g., when a new car is brought
+in and scrapped) or when a customer indicates that he/she is interested in a
+specific part ('quatity' would still be zero in this case). The 'modid' field
+indicates if it is a modified part or not (could be null). 'partprice' is the
+latest price (last value of 'price' from 'price_history' table). The 'quantity'
+field of course indicates the number of such parts available. The 'partdesc'
+field indicates name and type (e.g., engine, gas tank, left-side mirror, etc.).
+A typical insert may look like `insert into parts values(000001, 000001, null,
+"brakes", 20.00, 2)`.
 
 create table compatible(
     partid bigint,
