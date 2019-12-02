@@ -51,8 +51,7 @@ repeating them here. The only major change is that a 'localeid' is added to the
 made and the price at a specific location since multiple shops are expected to
 use this software package. The table 'products' is left out above in contrast to
 the class notes and instead replaced with 'parts' since products in the junkyard
-are of a specific variety. It is mentioned separately with the search &
-inventory management section of the system. 
+are of a specific variety.
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
