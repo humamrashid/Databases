@@ -189,14 +189,23 @@ has been modified. The 'original' and 'current' fields indicate the original and
 latest modified status of the specific part, respectively. Note also that the
 'current' field is the latest value of the 'moddesc' field in 'mod_history'
 table. A typcial insert may look like `insert into modification values(002558,
-"PSN123656-9730", "black left-side mirror", "repainted silver")`.
+"PSN123656-9730", "black left-side mirror", "repainted silver")`. Modification
+may require updating/inserting a new 'partid' entry for the modified item since
+it may now be considered a different type.
 
 create table mod_history(
     modhistoryid bigint        not null,
-    partid       bigint,
-    moddesc      varchar(500),
-    mtime        timestamp
+    serialnum    bigint        not null,
+    moddesc      varchar(500)  not null,
+    mtime        timestamp     not null
 );
+The 'mod_history' table is to 'modification' what 'price_history' is to
+'purchase_detail', in that it tracks the modification of a specific part over
+time since a part may undergo multiple modifications. The 'moddesc' field
+descrives the change that was made at 'mtime' time. A typical insert may look
+like `insert into mod_history values(850273, "PSN853812-5832", "Fixed small
+crack", "2019-12-02 18:00")`.
+
 create table waiting_list(
     waitinglistid bigint  not null,
     customerid    bigint,
