@@ -107,7 +107,8 @@ available at any junkyard. No two parts being inventoried can share a
 'serialnum' even if they are of the same type and origin. This table is filled
 automatically whenever a new part becomes available anywhere in the system and
 used primarily for internal tracking. A typical insert may look like `insert
-into part_detail values(000001, "PSN325823-8325")`.
+into part_detail values(000001, "PSN325823-8325")`. A different part of the same
+type would have the same 'partid' but a different 'serialnum'.
 
 create table compatible(
     partid   bigint not null,
