@@ -68,7 +68,9 @@ into the junkyard or expected to be (see 'waiting_list' below). An entry is
 added to this table as soon as a new car or part is brought in or a customer
 indicates that he/she is interested in parts for the specific car type. A
 typical insert may look like `insert into automobile values(000001, "Black",
-"Honda", "Accord", "Sedan", 2019)`.
+"Honda", "Accord", "Sedan", 2019)`. Since all junkyards using this software are
+linked through it, any specific junkyard is expected to have many car types
+cataloged in 'automobile' table for which no parts may exist in a specific shop.
 
 create table parts(
      autoid    bigint       not null,
@@ -77,6 +79,7 @@ create table parts(
      partdesc  varchar(500) not null,
      partprice numeric(8,2) not null,
      quantity  bigint       not null
+     localeid  bigint
 );
 
 The 'parts' table catalogs specific parts relative to a specific car type that
@@ -89,7 +92,8 @@ latest price (last value of 'price' from 'price_history' table). The 'quantity'
 field of course indicates the number of such parts available. The 'partdesc'
 field indicates name and type with any additional info. (e.g., engine, gas tank,
 cracked left-side mirror, etc.). A typical insert may look like `insert into
-parts values(000001, 000001, null, "brakes", 20.00, 2)`.
+parts values(000001, 000001, null, "brakes", 20.00, 2, 000018)`. A 'localeid' is
+needed only when it becomes available in a particular junkyard.
 
 create table compatible(
     partid bigint not null,
