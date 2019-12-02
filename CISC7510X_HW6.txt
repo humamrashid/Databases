@@ -98,6 +98,17 @@ cracked left-side mirror, etc.). A typical insert may look like `insert into
 parts values(000001, 000001, null, "brakes", 20.00, 2, 000018)`. A 'localeid' is
 needed only when it becomes available in a particular junkyard.
 
+create table part_detail(
+    partid    bigint,
+    serialnum varchar(100)
+)
+The 'part_detail' table catalogs and tracks each individual part that is
+available at any junkyard. No two parts being inventoried can share a
+'serialnum' even if they are of the same type and origin. This table is filled
+automatically whenever a new part becomes available anywhere in the system and
+used primarily for internal tracking. A typical insert may look like `insert
+into part_detail values(000001, "PSN325823-8325")`.
+
 create table compatible(
     partid   bigint not null,
     autoid   bigint not null,
