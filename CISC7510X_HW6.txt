@@ -89,7 +89,7 @@ The 'parts' table catalogs specific parts relative to a specific car type that
 have ever been brought into the junkyard or expected to be. An entry is added to
 this table as soon as a new part is available (e.g., when a new car is brought
 in and scrapped) or when a customer indicates that he/she is interested in a
-specific part ('quatity' would still be zero in this case). The 'modid' field
+specific part ('quantity' would still be zero in this case). The 'modid' field
 indicates if it is a modified part or not (could be null). 'partprice' is the
 latest price (last value of 'price' from 'price_history' table). The 'quantity'
 field of course indicates the number of such parts available. The 'partdesc'
