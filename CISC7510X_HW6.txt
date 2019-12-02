@@ -34,26 +34,27 @@ create table purchase(
 );
 create table purchase_detail(
     purchaseid bigint       not null,
-    partid,    bigint       not null,
-    quantity   bigint       not null,
-    localeid   bigint       not null,
     serialnum  varchar(100) not null
 );
 create table price_history(
-    partid   bigint       not null,
-    price    numeric(8,2) not null,
-    prtime   timestamp    not null,
-    localeid bigint       not null
+    price      numeric(8,2) not null,
+    pctime     timestamp    not null,
+    serialnum  varchar(100) not null
 );
 
 The purposes of the above tables were discussed at length in class so I am not
-repeating them here. The only major change is that a 'localeid' is added to the
-'purchase_detail' and 'price_history' tables to indicate where a purchase was
-made and the price at a specific location since multiple shops are expected to
-use this software package. The table 'products' is left out above in contrast to
-the class notes and instead replaced with 'parts' since products in the junkyard
-are of a specific variety. A 'serialnum' field is added to the 'purchase_detail'
-table to track exactly which parts were purchased in a given transaction.
+repeating them here. The table 'products' is left out above in contrast to the
+class notes and instead replaced with 'parts' and 'part_detail' since products
+in the junkyard are of a specific variety. A 'serialnum' field is added to the
+'purchase_detail' and 'price_history' table to track exactly which parts were
+purchased in a given transaction and to track a specific item's price changes,
+respectively. The inclusion of 'serialnum' also allows for the tracking of
+location of purchase, location of price change (given that two different
+junkyards do not necessarily change prices at the same time for the same part)
+and price change according to specific individual item (rather than item type
+since items of the same type may still be of different conditions, etc.). The
+'price_history' table further has a 'pctime' field to track when a certain price
+change has occured for a specific item.
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
