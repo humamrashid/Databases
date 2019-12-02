@@ -35,19 +35,24 @@ create table purchase(
 create table purchase_detail(
     purchaseid bigint not null,
     partid,    bigint not null,
-    quantity   bigint not null
+    quantity   bigint not null,
+    localeid   bigint not null
 );
 create table price_history(
-    partid bigint       not null,
-    price  numeric(8,2) not null,
-    prtime timestamp    not null
+    partid   bigint       not null,
+    price    numeric(8,2) not null,
+    prtime   timestamp    not null,
+    localeid bigint       not null
 );
 
 The purposes of the above tables were discussed at length in class so I am not
-repeating them here. The table 'products' is left out above in contrast to the
-class notes and instead replaced with 'parts' since products in the junkyard are
-of a specific variety. It is mentioned separately with the search & inventory
-management section of the system. 
+repeating them here. The only major change is that a 'localeid' is added to the
+'purchase_detail' and 'price_history' tables to indicate where a purchase was
+made and the price at a specific location since multiple shops are expected to
+use this software package. The table 'products' is left out above in contrast to
+the class notes and instead replaced with 'parts' since products in the junkyard
+are of a specific variety. It is mentioned separately with the search &
+inventory management section of the system. 
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
@@ -120,17 +125,24 @@ table. A typical insert may look like `insert into compatible values(000001,
 indicates that this part is also compatible with this type of car.
 
 create table location(
-    localeid bigint,
-    partid   bigint,
-    street   varchar(20),
-    city     varchar(20),
+    localeid bigint         not null,
+    street   varchar(20)    not null,
+    city     varchar(20)    not null,
     county   varchar(20),
-    postal   varchar(10),
-    country  varchar(20),
-    phone    varchar(20),
-    email    varchar(100),
+    region   varchar(20)    not null,
+    postal   varchar(10)    not null,
+    country  varchar(20)    not null,
+    phone    varchar(20)    not null,
+    email    varchar(100)   not null,
     link     varchar(100)
 );
+
+The 'location' table catalogs the different junkyards that use this same
+software package. The actual shops may be located across the nation or
+internationally. An entry is added to this table whenever a new junkyard starts
+subscribing to this software package. Where an event such as a purchase happens
+or where an object such as a (compatible) part is present, is kept track of
+using this table.
 
 The following is the schema of a limited set of services/processing work that
 might be performed in a typical junkyard:
