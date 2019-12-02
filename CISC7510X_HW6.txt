@@ -66,7 +66,6 @@ create table automobile(
     body   varchar(100) not null,
     year   integer      not null
 );
-
 The 'automobile' table catalogs specific car types that have ever been brought
 into the junkyard or expected to be (see 'waiting_list' below). An entry is
 added to this table as soon as a new car or part is brought in or a customer
@@ -86,7 +85,6 @@ create table parts(
      quantity  bigint       not null
      localeid  bigint
 );
-
 The 'parts' table catalogs specific parts relative to a specific car type that
 have ever been brought into the junkyard or expected to be. An entry is added to
 this table as soon as a new part is available (e.g., when a new car is brought
@@ -106,7 +104,6 @@ create table compatible(
     moded    boolean,
     localeid bigint
 );
-
 The 'compatible' table catalogs which entries in the 'parts' table is compatible
 with which entries in the 'automobile' table. It is expected that certain parts
 from some car model for instance, could be compatible with other models as well.
@@ -136,7 +133,6 @@ create table location(
     email    varchar(100)   not null,
     link     varchar(100)
 );
-
 The 'location' table catalogs the different junkyards that use this same
 software package. The actual shops may be located across the nation or
 internationally. An entry is added to this table whenever a new junkyard starts
