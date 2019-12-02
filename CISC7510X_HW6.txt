@@ -33,13 +33,15 @@ create table purchase(
     ptime      timestamp not null
 );
 create table purchase_detail(
-    purchaseid bigint       not null,
-    serialnum  varchar(100) not null
+    purchasedetailid bigint not   null,
+    purchaseid       bigint not   null,
+    serialnum        varchar(100) not null
 );
 create table price_history(
-    price      numeric(8,2) not null,
-    pctime     timestamp    not null,
-    serialnum  varchar(100) not null
+    pricehistoryid bigint       not null,
+    price          numeric(8,2) not null,
+    pctime         timestamp    not null,
+    serialnum      varchar(100) not null
 );
 
 The purposes of the above tables were discussed at length in class so I am not
@@ -47,14 +49,16 @@ repeating them here. The table 'products' is left out above in contrast to the
 class notes and instead replaced with 'parts' and 'part_detail' since products
 in the junkyard are of a specific variety. A 'serialnum' field is added to the
 'purchase_detail' and 'price_history' table to track exactly which parts were
-purchased in a given transaction and to track a specific item's price changes,
-respectively. The inclusion of 'serialnum' also allows for the tracking of
-location of purchase, location of price change (given that two different
+purchased in a given transaction and to uniquely track a specific item's price
+changes, respectively. The inclusion of 'serialnum' also allows for the tracking
+of location of purchase, location of price change (given that two different
 junkyards do not necessarily change prices at the same time for the same part)
 and price change according to specific individual item (rather than item type
 since items of the same type may still be of different conditions, etc.). The
-'price_history' table further has a 'pctime' field to track when a certain price
-change has occured for a specific item.
+'price_history' table further has a 'pctime' field to track of when a certain
+price change has occured for a specific item. Information such as quantity can
+also easily be summed up for any purchase by counting the individual
+'serialnum's in 'purchase_detail' for that 'purchaseid'.
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
@@ -80,8 +84,8 @@ cataloged in 'automobile' table for which no parts may exist in the specific
 shop.
 
 create table parts(
-    autoid    bigint       not null,
     partid    bigint       not null,
+    autoid    bigint       not null,
     partdesc  varchar(500) not null,
     quantity  bigint       not null
 );
@@ -95,13 +99,14 @@ parts available. A typical insert may look like `insert into parts
 values(000001, 000001, 2, "Brakes")`.
 
 create table part_detail(
-    partid     bigint        not null,
-    serialnum  varchar(100)  not null,
-    modid      bigint,
-    condition  varchar(20)   not null,
-    detaildesc varchar(500),
-    partprice  numeric(8,2)  not null,
-    localeid   bigint        not null
+    partdetailid bigint        not null,
+    partid       bigint        not null,
+    serialnum    varchar(100)  not null,
+    modid        bigint,
+    condition    varchar(20)   not null,
+    detaildesc   varchar(500),
+    partprice    numeric(8,2)  not null,
+    localeid     bigint        not null
 )
 The 'part_detail' table catalogs and tracks each individual part that is/was
 available at any junkyard. No two parts being inventoried can share a
@@ -119,10 +124,11 @@ part_detail values(000001, "PSN123456-7890", null, "Used", "No issues", 20.00,
 000018)`.
 
 create table compatible(
-    partid   bigint not null,
-    autoid   bigint not null,
-    moded    boolean,
-    localeid bigint
+    compatibleid bigint   not null,
+    partid       bigint   not null,
+    autoid       bigint   not null,
+    moded        boolean,
+    localeid     bigint
 );
 The 'compatible' table catalogs which entries in the 'parts' table is compatible
 with which entries in the 'automobile' table. It is expected that certain parts
@@ -180,14 +186,16 @@ keep track of original modified parts and parts in their original condition, as
 well as to locate where a certain modified part is available.
 
 create table mod_history(
-    partid  bigint,
-    moddesc varchar(500),
-    mtime   timestamp
+    modhistoryid bigint        not null,
+    partid       bigint,
+    moddesc      varchar(500),
+    mtime        timestamp
 );
 create table waiting_list(
-    customerid bigint,
-    partid     bigint,
-    quantity   bigint
+    waitinglistid bigint  not null,
+    customerid    bigint,
+    partid        bigint,
+    quantity      bigint
 );
 create table delivery(
     deilveryid bigint,
