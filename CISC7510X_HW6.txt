@@ -33,10 +33,11 @@ create table purchase(
     ptime      timestamp not null
 );
 create table purchase_detail(
-    purchaseid bigint not null,
-    partid,    bigint not null,
-    quantity   bigint not null,
-    localeid   bigint not null
+    purchaseid bigint       not null,
+    partid,    bigint       not null,
+    quantity   bigint       not null,
+    localeid   bigint       not null,
+    serialnum  varchar(100) not null
 );
 create table price_history(
     partid   bigint       not null,
@@ -51,7 +52,8 @@ repeating them here. The only major change is that a 'localeid' is added to the
 made and the price at a specific location since multiple shops are expected to
 use this software package. The table 'products' is left out above in contrast to
 the class notes and instead replaced with 'parts' since products in the junkyard
-are of a specific variety.
+are of a specific variety. A 'serialnum' field is added to the 'purchase_detail'
+table to track exactly which parts were purchased in a given transaction.
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
@@ -67,7 +69,7 @@ create table automobile(
     year   integer      not null
 );
 The 'automobile' table catalogs specific car types that have ever been brought
-into the junkyard or expected to be (see 'waiting_list' below). An entry is
+into the junkyard or is expected to be (see 'waiting_list' below). An entry is
 added to this table as soon as a new car or part is brought in or a customer
 indicates that he/she is interested in parts for the specific car type. A
 typical insert may look like `insert into automobile values(000001, "Black",
@@ -77,38 +79,43 @@ cataloged in 'automobile' table for which no parts may exist in the specific
 shop.
 
 create table parts(
-     autoid    bigint       not null,
-     partid    bigint       not null,
-     modid     bigint,
-     partdesc  varchar(500) not null,
-     partprice numeric(8,2) not null,
-     quantity  bigint       not null
-     localeid  bigint
+    autoid    bigint       not null,
+    partid    bigint       not null,
+    partdesc  varchar(500) not null,
+    quantity  bigint       not null
 );
-The 'parts' table catalogs specific parts relative to a specific car type that
-have ever been brought into the junkyard or expected to be. An entry is added to
-this table as soon as a new part is available (e.g., when a new car is brought
-in and scrapped) or when a customer indicates that he/she is interested in a
-specific part ('quantity' would still be zero in this case). The 'modid' field
-indicates if it is a modified part or not (could be null). 'partprice' is the
-latest price (last value of 'price' from 'price_history' table). The 'quantity'
-field of course indicates the number of such parts available. The 'partdesc'
-field indicates name and type with any additional info. (e.g., engine, gas tank,
-cracked left-side mirror, etc.). A typical insert may look like `insert into
-parts values(000001, 000001, null, "brakes", 20.00, 2, 000018)`. A 'localeid' is
-needed only when it becomes available in a particular junkyard.
+The 'parts' table catalogs specific part types relative to specific car types
+that have ever been brought into a junkyard. An entry is added to this table as
+soon as a new part is available (e.g., when a new car is brought in and
+scrapped). The 'partdesc' field indicates name and type with any additional
+info. (e.g., engine, gas tank, left-side mirror, etc.) that is true for all
+parts of this type. The 'quantity' field of course indicates the number of such
+parts available. A typical insert may look like `insert into parts
+values(000001, 000001, 2, "Brakes")`.
 
 create table part_detail(
-    partid    bigint,
-    serialnum varchar(100)
+    partid     bigint        not null,
+    serialnum  varchar(100)  not null,
+    modid      bigint,
+    condition  varchar(20)   not null,
+    detaildesc varchar(500),
+    partprice  numeric(8,2)  not null,
+    localeid   bigint        not null
 )
 The 'part_detail' table catalogs and tracks each individual part that is/was
 available at any junkyard. No two parts being inventoried can share a
 'serialnum' even if they are of the same type and origin. This table is filled
-automatically whenever a new part becomes available anywhere in the system and
-used primarily for internal tracking. A typical insert may look like `insert
-into part_detail values(000001, "PSN325823-8325")`. A different part of the same
-type would have the same 'partid' but a different 'serialnum'.
+whenever a new part becomes available anywhere in the system and used for
+tracking of specific individual parts rather than the type of part. A different
+part of the same type would have the same 'partid' but a different 'serialnum'.
+The 'modid' field indicates whether it is a modified part or not (could be null,
+indicating unmodified). The 'condition' field is used for terms like used and
+new and the related 'detaildesc' describes specifics of the individual part such
+as "broken", "malfunctioning", etc. The 'partprice' is the latest price (last
+value of 'price' from 'price_history' table) and 'localeid' indicates the
+junkyard where it is available. A typical insert may look like `insert into
+part_detail values(000001, "PSN123456-7890", null, "Used", "No issues", 20.00,
+000018)`.
 
 create table compatible(
     partid   bigint not null,
@@ -167,6 +174,10 @@ create table modification(
     original varchar(100),
     current  varchar(100)
 );
+The 'modification' table catalogs parts that have been modified. This is used to
+keep track of original modified parts and parts in their original condition, as
+well as to locate where a certain modified part is available.
+
 create table mod_history(
     partid  bigint,
     moddesc varchar(500),
@@ -180,7 +191,7 @@ create table waiting_list(
 create table delivery(
     deilveryid bigint,
     purchaseid bigint,
-    localeid   bigint,
+    serialnum  varchar(100),
     dtime      timestamp
 );
 
