@@ -121,11 +121,12 @@ possibility of the part not being available anywhere (anymore). The other fields
 cannot be null and at least one entry is required for each part, so at least one
 entry is created for this table as soon as an entry is added to the 'parts'
 table. A typical insert may look like `insert into compatible values(000001,
-000001, null)`. Another entry for part 000001 but with a different 'autoid'
-indicates that this part is also compatible with this type of car.
+000001, null, null)`. Another entry for part 000001 but with a different
+'autoid' indicates that this part is also compatible with this type of car.
 
 create table location(
     localeid bigint         not null,
+    shopname varchar(20)    not null,
     street   varchar(20)    not null,
     city     varchar(20)    not null,
     county   varchar(20),
@@ -142,7 +143,11 @@ software package. The actual shops may be located across the nation or
 internationally. An entry is added to this table whenever a new junkyard starts
 subscribing to this software package. Where an event such as a purchase happens
 or where an object such as a (compatible) part is present, is kept track of
-using this table.
+using this table. The 'link' field is meant for URLs in case the specific
+junkyard has a website, Facebook page, etc. A typical insert may look like
+`insert into location values(000018, "Nassau Junk Parts",
+"20 W. Old Country Rd.", "Oyster Bay", "Nassau", "New York", "11801", "USA",
+"555-555-5555", "nassaujunk@gmail.com", null)`.
 
 The following is the schema of a limited set of services/processing work that
 might be performed in a typical junkyard:
