@@ -125,7 +125,7 @@ create table part_detail(
     detaildesc   varchar(500),
     partprice    numeric(8,2)  not null,
     localeid     bigint        not null
-)
+);
 The 'part_detail' table catalogs and tracks each individual part that is/was
 available at any junkyard. No two parts being inventoried can share a
 'serialnum' even if they are of the same type and origin. This table is filled
@@ -190,7 +190,9 @@ junkyard has a website, Facebook page, etc. A typical insert may look like
 "555-555-5555", "nassaujunk@gmail.com", null)`.
 
 The following is the schema of a limited set of services/processing work that
-might be performed in a typical junkyard:
+might be performed in a typical junkyard (to keep things simple only very basic
+things are included here, other possible tables that might be used include one
+for processing returns and so on):
 
 Services & Processing Management
 --------------------------------
@@ -233,6 +235,7 @@ create table waiting_list(
     condition     varchar(20),
     partdesc      varchar(100) not null,
     quantity      integer      not null,
+    wstime        timestamp    not null
 );
 The 'waiting_list' table catalogs parts that are not currently available but are
 desired. This could mean that a customer has requested it or that a junkyard
@@ -240,16 +243,30 @@ expects there to be customers for this part type (for the former case, a
 'customerid' would be required). The 'waiting_list' table is specific to each
 junkyard account in the system. An addition to this table however requires a
 simultaneous addition into the global 'parts' table in case this is not a part
-type that was cataloged in the system previously. A typical insert may look like
-`insert into waiting_list values(157105, 148588, 008594, null, "Red steering
-wheel", 1)`.
+type that was cataloged in the system previously. The 'wstime' field indicates
+the time an entry was created. A typical insert may look like `insert into
+waiting_list values(157105, 148588, 008594, null, "Red steering wheel", 1,
+"2018-12-15 15:30")`.
+
+create table waitinglist_detail(
+    waitinglistdetailid bigint    not null,
+    waitinglistid       bigint    not null,
+    wctime              timestamp not null
+);
+The 'waitinglist_detail' table is associated with the 'waiting_list' table and
+tracks if and when a waiting list entry was filled. The existence of a
+waitinglistdetailid implies fulfillment. The 'wctime' value is the time of
+fulfillment. This table essentially exists so that updates or deletions are not
+required in the 'waiting_list' table when the item is in possession. A typical
+insert may look like `insert into delivery_detail values(145831, 157105,
+"2019-02-23 14:30")`. Like 'waiting_list', 'waitinglist_detail' is specific to
+each junkyard account in the system.
 
 create table delivery(
-    deilveryid       bigint        not null,
-    purchasedetailid bigint        not null,
-    serialnum        varchar(100)  not null,
-    stime            timestamp     not null,
-    dtime            timestamp,
+    deilveryid       bigint       not null,
+    purchasedetailid bigint       not null,
+    serialnum        varchar(100) not null,
+    stime            timestamp    not null,
     tracknum         varchar(100)
 );
 Do junkyards have delivery service? I don't really know, but in case they do:
@@ -258,15 +275,24 @@ when a customer makes a purchase of an item and requests delivery. Thus, each
 delivery entry is specific to a part and a missing entry for a certain
 'purchasedetailid' indicates delivery was not requested. The 'stime' indicates a
 shipping time (i.e., whenever it was handed over to a shipping service or sent
-out with their own delivery people). The 'dtime' and 'tracknum' are the
-delivered time and tracking number, respectively; these can be null because
-delivery happens a significant time after an entry is added to this table (in
-which case an update is necessary) and tracking numbers would not be required if
-a shipping service is not used. A typical insert may look like `insert into
-delivery values(532707, 753564, "PSN573458-7866", "2017-04-21 07:30", null,
-null)`. Note that significant additional information about deliveries (e.g.
-which junkyard in the system it was sent out from) can be accessed through the
-'serialnum'. The 'delivery' table is specific to each junkyard account in the
+out with their own delivery people). The 'tracknum' is therefore only required
+when a shipping service is used. A typical insert may look like `insert into
+delivery values(532707, 753564, "PSN573458-7866", "2017-04-21 07:30", null)`.
+The 'delivery' table is specific to each junkyard account in the system.
+
+create table delivery_detail(
+    deliverydetailid bigint    not null,
+    deliveryid       bigint    not null,
+    dtime            timestamp not null
+);
+The 'delivery_detail' table is associated with the 'delivery' table and tracks
+information specific to each delivery that is expected to be added after
+shipment (i.e. time of delivery and delivery confirmation). The existence of a
+deliverydetailid implies delivery confirmation. The 'dtime' value is the time of
+delivery. This table essentially exists so that updates are not required in the
+'delivery' table when a delivery is completed. A typical insert may look like
+`insert into delivery_detail values(175031, 542707, "2017-04-23 14:30")`. Like
+'delivery', 'delivery_detail' is also specific to each junkyard account in the
 system.
 
 # EOF.
