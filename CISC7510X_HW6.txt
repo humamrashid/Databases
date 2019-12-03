@@ -12,10 +12,12 @@ inventory systems (e.g., online bookstores) work. Due to this, my design is an
 amalgamation of the online store DB design discussed in class along with
 management requirements for junkyard automobile parts. The schema are divided
 into sections for ease of reading but its meant to be all in one database
-managed by the overall software system. However, note that all tables in
-transactions category and some tables in services & processing management
-category would be specific to each junkyard and essentially separated into
-different accounts, each having its own distinct versions of the tables.
+managed by the overall software system. However, note that all tables in the
+transactions section and some tables in services & processing management section
+would be specific to each junkyard in my design and separated into different
+accounts (one per junkyard), each having its own distinct versions of these
+specific tables (although they are synchronized as needed with the other tables
+that are shared by all junkyards).
 
 The following is the schema for the transactions section of section inventory
 system and is based directly on the design discussed in class, adjusted for the
