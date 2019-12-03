@@ -12,7 +12,7 @@ inventory systems (e.g., online bookstores) work. Due to this, my design is an
 amalgamation of the online store DB design discussed in class along with
 management requirements for junkyard automobile parts. The schema are divided
 into sections for ease of reading but its meant to be all in one database
-manages by the overall software system. However, note that all tables in
+managed by the overall software system. However, note that all tables in
 transactions category and some tables in services & processing management
 category would be specific to each junkyard and essentially separated into
 different accounts, each having its own distinct versions of the tables.
