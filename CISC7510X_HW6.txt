@@ -61,7 +61,7 @@ junkyards do not necessarily change prices at the same time for the same part)
 and price change according to specific individual item (rather than item type
 since items of the same type may still be of different conditions, etc.). The
 'price_history' table further has a 'pctime' field to track of when a certain
-price change has occured for a specific item. Information such as quantity can
+price change has occurred for a specific item. Information such as quantity can
 also easily be summed up for any purchase by counting the individual
 'serialnum's in 'purchase_detail' for that 'purchaseid'. A 'deliveryid' field is
 added to 'purchase_detail' in case
@@ -103,7 +103,7 @@ that have ever been brought into a junkyard or is expected to be as with
 'automobiles' table. An entry is added to this table as soon as a new part is
 available (e.g., when a new car is brought in and scrapped) or a customer
 indicates he/she is interested in a part (which not being available yet ->
-quantiy = 0). The 'partdesc' field indicates name and type with any additional
+quantity = 0). The 'partdesc' field indicates name and type with any additional
 info. (e.g., engine, gas tank, left-side mirror, etc.) that is true for all
 parts of this type and car (which may not be physically available currently).
 The 'quantity' field of course indicates the number of such parts available in
@@ -208,7 +208,7 @@ specific part indicates that this specific part (and not all parts of this type)
 has been modified. The 'original' and 'current' fields indicate the original and
 latest modified status of the specific part, respectively. Note also that the
 'current' field is the latest value of the 'moddesc' field in 'mod_history'
-table. A typcial insert may look like `insert into modification values(002558,
+table. A typical insert may look like `insert into modification values(002558,
 "PSN123656-9730", "black left-side mirror", "repainted silver")`. Modification
 may require updating/inserting a new 'partid' entry for the modified item since
 it may now be considered a different type.
@@ -255,12 +255,12 @@ create table delivery(
 Do junkyards have delivery service? I don't really know, but in case they do:
 the 'delivery' table tracks delivery events. An entry is added to this table
 when a customer makes a purchase of an item and requests delivery. Thus, each
-delivery entry is specific to a part and a missing entry for a certail
+delivery entry is specific to a part and a missing entry for a certain
 'purchasedetailid' indicates delivery was not requested. The 'stime' indicates a
 shipping time (i.e., whenever it was handed over to a shipping service or sent
 out with their own delivery people). The 'dtime' and 'tracknum' are the
 delivered time and tracking number, respectively; these can be null because
-delivery happens a signicant time after an entry is added to this table (in
+delivery happens a significant time after an entry is added to this table (in
 which case an update is necessary) and tracking numbers would not be required if
 a shipping service is not used. A typical insert may look like `insert into
 delivery values(532707, 753564, "PSN573458-7866", "2017-04-21 07:30", null,
