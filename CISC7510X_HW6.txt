@@ -258,7 +258,7 @@ tracks if and when a waiting list entry was filled. The existence of a
 waitinglistdetailid implies fulfillment. The 'wctime' value is the time of
 fulfillment. This table essentially exists so that updates or deletions are not
 required in the 'waiting_list' table when the item is in possession. A typical
-insert may look like `insert into delivery_detail values(145831, 157105,
+insert may look like `insert into waitinglist_detail values(145831, 157105,
 "2019-02-23 14:30")`. Like 'waiting_list', 'waitinglist_detail' is specific to
 each junkyard account in the system.
 
