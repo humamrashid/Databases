@@ -17,7 +17,7 @@ transactions section and some tables in services & processing management section
 would be specific to each junkyard in my design and separated into different
 accounts (one per junkyard), each having its own distinct versions of these
 specific tables (although they are synchronized as needed with the other tables
-that are all accounts have some form of access to).
+which all accounts have some form of access to).
 
 The following is the schema for the transactions section of section inventory
 system and is based directly on the design discussed in class, adjusted for the
