@@ -11,7 +11,11 @@ less the entire process is required based on my understanding of how typical
 inventory systems (e.g., online bookstores) work. Due to this, my design is an
 amalgamation of the online store DB design discussed in class along with
 management requirements for junkyard automobile parts. The schema are divided
-into sections for ease of reading but its meant to be all in one database.
+into sections for ease of reading but its meant to be all in one database
+manages by the overall software system. However, note that all tables in
+transactions category and some tables in services & processing management
+category would be specific to each junkyard and essentially separated into
+different accounts, each having its own distinct versions of the tables.
 
 The following is the schema for the transactions section of section inventory
 system and is based directly on the design discussed in class, adjusted for the
@@ -59,7 +63,8 @@ since items of the same type may still be of different conditions, etc.). The
 'price_history' table further has a 'pctime' field to track of when a certain
 price change has occured for a specific item. Information such as quantity can
 also easily be summed up for any purchase by counting the individual
-'serialnum's in 'purchase_detail' for that 'purchaseid'.
+'serialnum's in 'purchase_detail' for that 'purchaseid'. A 'deliveryid' field is
+added to 'purchase_detail' in case
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
@@ -81,22 +86,35 @@ indicates that he/she is interested in parts for the specific car type. A
 typical insert may look like `insert into automobile values(000001, "Black",
 "Honda", "Accord", "Sedan", 2019)`. Since all junkyards using this software are
 linked through it, it is likely that not all junkyards would have parts
-available for every car cataloged in 'automobile' table.
+available for every car cataloged in 'automobile' table. Entries for parts in
+the 'parts' table for which a car type does not yet exist in 'automobile' would
+require a simultaneous entry to that car type in this table. The above implies
+that 'autoid' is used for recognition and tracking of any car types that is or
+may possibly become available in the system.
 
 create table parts(
     partid    bigint       not null,
     autoid    bigint       not null,
     partdesc  varchar(500) not null,
-    quantity  bigint       not null
+    quantity  integer      not null
 );
 The 'parts' table catalogs specific part types relative to specific car types
-that have ever been brought into a junkyard. An entry is added to this table as
-soon as a new part is available (e.g., when a new car is brought in and
-scrapped). The 'partdesc' field indicates name and type with any additional
+that have ever been brought into a junkyard or is expected to be as with
+'automobiles' table. An entry is added to this table as soon as a new part is
+available (e.g., when a new car is brought in and scrapped) or a customer
+indicates he/she is interested in a part (which not being available yet ->
+quantiy = 0). The 'partdesc' field indicates name and type with any additional
 info. (e.g., engine, gas tank, left-side mirror, etc.) that is true for all
-parts of this type and car. The 'quantity' field of course indicates the number
-of such parts available. A typical insert may look like `insert into parts
-values(000001, 000001, "Brakes", 2)`.
+parts of this type and car (which may not be physically available currently).
+The 'quantity' field of course indicates the number of such parts available in
+stock. A typical insert may look like `insert into parts values(000001, 000001,
+"Brakes", 2)`. Note that unlike 'part_detail', entries in 'parts' do not
+necessarily imply that these parts are available somewhere in the system,
+instead, like 'automobile' it catalogs the type of item available and/or
+desired. Entries for parts that are not yet available need a simultaneous entry
+into the 'waiting_list' table in case it was a customer request (using the same
+'partid'). The above implies that 'partid' is used for recognition and tracking
+of any parts that is or may possibly become available in the system.
 
 create table part_detail(
     partdetailid bigint        not null,
@@ -121,7 +139,8 @@ as "broken", "malfunctioning", etc. The 'partprice' is the latest price (last
 value of 'price' from 'price_history' table) and 'localeid' indicates the
 junkyard where it is available. A typical insert may look like `insert into
 part_detail values(000050, 000001, "PSN123456-7890", null, "Used", "No issues",
-20.00, 000018)`.
+20.00, 000018)`. Note that unlike 'parts', entries in 'part_detail' do
+necessarily imply that these parts are available somewhere in the system.
 
 create table compatible(
     compatibleid bigint   not null,
@@ -208,11 +227,23 @@ like `insert into mod_history values(850273, "PSN853812-5832", "Fixed small
 crack", "2019-12-02 18:00")`.
 
 create table waiting_list(
-    waitinglistid bigint  not null,
+    waitinglistid bigint       not null,
     customerid    bigint,
-    partid        bigint,
-    quantity      bigint
+    partid        bigint       not null,
+    condition     varchar(20),
+    partdesc      varchar(100) not null,
+    quantity      integer      not null,
 );
+The 'waiting_list' table catalogs parts that are not currently available but are
+desired. This could mean that a customer has requested it or that a junkyard
+expects there to be customers for this part type (for the former case, a
+'customerid' would be required). The 'waiting_list' table is specific to each
+junkyard account in the system. An addition to this table however requires a
+simultaneous addition into the global 'parts' table in case this is not a part
+type that was cataloged in the system previously. A typical insert may look like
+`insert into waiting_list values(157105, 148588, 008594, null, "Red steering
+wheel", 1)`.
+
 create table delivery(
     deilveryid       bigint        not null,
     purchasedetailid bigint        not null,
@@ -233,6 +264,9 @@ delivery happens a signicant time after an entry is added to this table (in
 which case an update is necessary) and tracking numbers would not be required if
 a shipping service is not used. A typical insert may look like `insert into
 delivery values(532707, 753564, "PSN573458-7866", "2017-04-21 07:30", null,
-null)`.
+null)`. Note that significant additional information about deliveries (e.g.
+which junkyard in the system it was sent out from) can be accessed through the
+'serialnum'. The 'delivery' table is specific to each junkyard account in the
+system.
 
 # EOF.
