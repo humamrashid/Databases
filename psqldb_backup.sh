@@ -24,17 +24,15 @@ if [ ! -d $4 ]; then
     exit 2
 fi
 cd $4
-for ((i=0; i<=$#; i++)); do
-    if [ $i -gt 5 ]; then
-        PGPASSWORD=$1 psql -U $2 -d $3 -c \
-        "\copy ${!i} to stdout with (format csv, header true, delimiter ',');" \
-        > ${!i}.csv && \
-        tar cz ${!i}.csv | gpg --encrypt --recipient $5 \
-        > ${!i}.$(date '+%Y%m%d_%H%M%S').tar.gz.gpg && \
-        rm ${!i}.csv
-    fi
+for ((i=6; i<=$#; i++)); do
+    PGPASSWORD=$1 psql -U $2 -d $3 -c \
+    "\copy ${!i} to stdout with (format csv, header true, delimiter ',');" \
+    > ${!i}.csv && \
+    tar cz ${!i}.csv | gpg --encrypt --recipient $5 \
+    > ${!i}.$(date '+%Y%m%d_%H%M%S').tar.gz.gpg && \
+    rm ${!i}.csv
 done
-cd -
+cd - > /dev/null
 exit 0
 
 # EOF.
