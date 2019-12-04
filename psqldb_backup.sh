@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Humam Rashid
 # CISC 7510X, Fall 2019.
 
@@ -19,12 +18,10 @@ if [ $# -lt 6 ]; then
         "<tab1...tabN>"
     exit 1
 fi
-
 if [ ! -d $4 ]; then
     echo "directory $4 does not exist!"
     exit 2
 fi
-
 for ((i=0; i<=$#; i++)); do
     if [ $i -gt 5 ]; then
         PGPASSWORD=$1 psql -U $2 -d $3 -c \
