@@ -9,7 +9,8 @@
 # for the recipient. Works on one database at a time but any number of tables
 # from the database can be supplied as arguments. First 5 arguments to the
 # script are database owner password, database owner name, database name, backup
-# path and recipient user-id (i.e., email address).
+# path and recipient user-id (i.e., email address). Any arguments thereafter are
+# considered to be the names of tables from the database.
 
 if [ $# -lt 6 ]; then
     echo "usage: $0 <db_pass> <db_owner> <db_name> <backup_path> <recipient>"\
