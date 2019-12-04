@@ -3,7 +3,8 @@ CISC 7510X, Fall 2019.
 
 My database backup program is a bash script that is run every day at 1:00 AM
 using cron on UNIX-like systems (tested on Ubuntu 19.10). Explanation for use is
-in the script comments.
+in the script comments. (The password for database owner is of course not the
+real one).
 
 Bash Script
 -----------
@@ -57,6 +58,6 @@ Crontab
 # To run: everyday at 1:00 AM local time.
 BIN_DIR=/home/humam/bin
 BACKUP_DIR=/home/humam/Backups
-0 1 * * * $BIN_DIR/psqldb_backup.sh A19-S1l1t postgres rashid_cisc7510x $BACKUP_DIR humamrashid@gmail.com daily_prcnt
+0 1 * * * $BIN_DIR/psqldb_backup.sh MYPASS123 postgres rashid_cisc7510x $BACKUP_DIR humamrashid@gmail.com daily_prcnt
 
 # EOF.
