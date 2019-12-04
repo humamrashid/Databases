@@ -10,7 +10,9 @@
 # from the database can be supplied as arguments. First 5 arguments to the
 # script are database owner password, database owner name, database name, backup
 # path and recipient user-id (i.e., email address). Any arguments thereafter are
-# considered to be the names of tables from the database.
+# considered to be the names of tables from the database. Each encrypted archive
+# for a particular table is saved in the backup directory with the original name
+# followed by a timestamp and ending '.tar.gz.gpg'.
 
 if [ $# -lt 6 ]; then
     echo "usage: $0 <db_pass> <db_owner> <db_name> <backup_path> <recipient>"\
