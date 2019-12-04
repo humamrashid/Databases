@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ $# -lt 6 ]; then
-    echo "usage: $0 <db_pass> <db_owner> <db_name> <backup_path> <recipient> <tab1...tabN>"
+    echo "usage: $0 <db_pass> <db_owner> <db_name> <backup_path> <recipient>"\
+        "<tab1...tabN>"
     exit 1
 fi
 
