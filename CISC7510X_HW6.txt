@@ -66,7 +66,7 @@ since items of the same type may still be of different conditions, etc.). The
 price change has occurred for a specific item. Information such as quantity can
 also easily be summed up for any purchase by counting the individual
 'serialnum's in 'purchase_detail' for that 'purchaseid'. A 'deliveryid' field is
-added to 'purchase_detail' in case
+added to 'purchase_detail' in case a particular junkyard has a delivery service.
 
 The following is the schema for the inventory tracking and search facilities of
 a junkyard business:
