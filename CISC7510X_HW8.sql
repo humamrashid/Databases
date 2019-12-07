@@ -8,16 +8,14 @@ with recursive recfiles (id, name) as (
     select id, '/' || name
     from file
     where parentid=0 -- Assuming 0 is root directory,
-                     -- get names of all files and directories.
+                     -- get names of all files and directories directly under
+                     -- root.
     union all
-    select id, b.name || a.name
-    from recfiles b join file a
-    where a.parentid=b.id
+    select id, b.name || '/' || a.name
+    from files a join recfiles b
+        inner join on a.parentid=b.id;
 )
-select name || 
-from recfiles
-where id=1
-union all
-select 
+select *
+from recfiles;
 
 -- EOF.
