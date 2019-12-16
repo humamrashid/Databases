@@ -207,7 +207,7 @@ create table modification(
 The 'modification' table catalogs parts that have been modified. This is used to
 keep track of modified parts and parts in their original condition. It is also
 used to locate where a certain modified part is available (using the 'serialnum'
-field). The existence of a en entry in this table (and hence a 'modid') for a
+field). The existence of an entry in this table (and hence a 'modid') for a
 specific part indicates that this specific part (and not all parts of this type)
 has been modified. The 'original' and 'current' fields indicate the original and
 latest modified status of the specific part, respectively. Note also that the

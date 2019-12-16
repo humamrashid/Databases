@@ -1,7 +1,7 @@
 -- Humam Rashid
 -- CISC 7510X, Fall 2019
 
-create table DAILY_PRCNT as
+create table DAILY_PRCNT_10M as
     with DATA as (
         select
             a.TDATE,
@@ -17,6 +17,9 @@ create table DAILY_PRCNT as
                 on a.TDATE = b.TDATE and a.SYMBOL = b.SYMBOL
             left outer join SPLITSTAB c
                 on a.TDATE = c.TDATE and a.SYMBOL = c.SYMBOL
+        where (a.close*a.volume)>=10000000
+            and
+            (a.tdate between '2013-12-01' and '2013-12-31')
     )
     select
         TDATE,
