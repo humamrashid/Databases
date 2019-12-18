@@ -60,7 +60,7 @@ select asym, bsym, correl
 from top
 where correl is not null
 limit 20; 
--- Formatting may be off in the above since I has postgresql print out the
+-- Formatting may be off in the above since I had postgresql print out the
 -- command history and then formatted it by hand.
 
 -- Second step output:
