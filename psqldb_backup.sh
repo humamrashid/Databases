@@ -1,6 +1,5 @@
 #!/bin/bash
 # Humam Rashid
-# CISC 7510X, Fall 2019.
 
 # psqldb_backup: a script for UNIX-like systems running bash to archive and
 # encrypt Postgresql database tables. Only works with psql and GnuPG. Further,
