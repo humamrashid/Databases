@@ -303,29 +303,4 @@ Description of which tables would receive entries when a new junky car arrives
 is given under the relevant table DDLs, especially in the 'Search & Inventory
 Management' section above.
 
-When a customer arrives looking for a part, the following is an example of the
-query run to locate the part:
-
-select d.*
-from parts_detail d
-    inner join parts p on d.partid=p.partid
-    inner join compatible c on p.partid=c.partid
-    inner join automobile a on c.autoid=a.autoid
-where
-    (p.partdesc like "left-side mirror%")
-    and
-    (a.color like "white%")
-    and
-    (a.make like "ford%")
-    and
-    (a.model like "mustang%")
-    and
-    (a.year=2013);
-
-In the above example, the customer has come and asked the person at the helpdesk
-or entered into an automated kiosk for left-side mirrors compatible with a white
-2013 Ford Mustang. The above query (hopefully) shows all parts available and
-matching that description located in any junkyard which uses the same software
-package for inventory management.
-
 # EOF.
