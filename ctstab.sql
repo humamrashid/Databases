@@ -3,7 +3,7 @@
 use mydb;
 
 create table if not exists ctstab (
-    tdate str_to_date(date,
+    tdate date,
     symbol varchar(18),
     open numeric(18,8),
     high numeric(18,8),
