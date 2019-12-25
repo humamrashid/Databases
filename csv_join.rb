@@ -86,8 +86,8 @@ def hash_join(key_index, file1, file2)
   end
 end
 
-# merge_sorter(): sorts CSV files for merge_join() by sorting records in-place.
-def merge_sorter(key_index, file1, file2)
+# merge_sorter!(): sorts CSV files for merge_join() by sorting records in-place.
+def merge_sorter!(key_index, file1, file2)
   key = file1[0][key_index]
   if key.int?
     # Treat the key as an integer.
@@ -108,7 +108,7 @@ end
 # a numeric type (int or float). Output is sorted on join key.
 def merge_join(key_index, file1, file2)
   # Sorting part.
-  merge_sorter(key_index, file1, file2)
+  merge_sorter!(key_index, file1, file2)
   # Merging part.
   r = file1[i = 0]
   q = file2[j = 0]
