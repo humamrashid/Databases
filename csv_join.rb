@@ -153,10 +153,8 @@ def nested_join(key_index, file1, file2)
   end
 end
 
-if ARGV.length != 4 || (choice = proc_arg(ARGV[0])).nil?
-  msg = "Usage: #{$PROGRAM_NAME} < -h | -m | -n > <key_index> <file1> <file2>"
-  abort msg
-end
+abort "Usage: #{$PROGRAM_NAME} < -h | -m | -n > <key_index> <file1> <file2>" \
+  if ARGV.length != 4 || (choice = proc_arg(ARGV[0])).nil?
 file1 = CSV.read(ARGV[2])
 exit_if_empty(file1)
 file2 = CSV.read(ARGV[3])
@@ -164,9 +162,7 @@ exit_if_empty(file2)
 
 if ARGV[1].int?
   key_index = ARGV[1].to_i
-  if (key_index < 0) || (key_index >= file1[0].length)
-    abort 'Error: key_index out of bounds!'
-  end
+  abort 'Error: key_index out of bounds!' if (key_index < 0) || (key_index >= file1[0].length)
 else
   abort 'Error: key_index must be an integer value!'
 end
