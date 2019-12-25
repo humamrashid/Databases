@@ -3,4 +3,5 @@
 *.zip
 *.tar
 *.tar.gz
+temp*
 world.sql
