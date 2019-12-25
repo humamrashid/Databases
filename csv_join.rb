@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
 # Humam Rashid
-# CISC 7510X, Fall 2019.
 #
 # csv_join: A join implementation for CSV files.
 # Assumes both CSV files have same number of fields per
