@@ -91,7 +91,8 @@ def hash_join(key_index, file1, file2)
   end
   file2.each do |j|
     f1_val = f1_htable[j[key_index].hash]
-    puts "#{j[key_index]} #{f1_val.reject { |e| e == j[key_index] }.to_csv.chomp} #{j.reject { |e| e == j[key_index] }.to_csv.chomp}" unless f1_val.nil?
+    puts "#{j[key_index]} #{f1_val.reject { |e| e == j[key_index] }.to_csv.chomp} #{j.reject \
+      { |e| e == j[key_index] }.to_csv.chomp}" unless f1_val.nil?
   end
 end
 
@@ -130,19 +131,22 @@ def merge_join(key_index, file1, file2)
       r = file1[i += 1]
     else
       # The records match on the join key.
-      puts "#{r[key_index]} #{r.reject { |e| e == r[key_index] }.to_csv.chomp} #{q.reject { |e| e == r[key_index] }.to_csv.chomp}" unless r[key_index].nil? || q[key_index].nil?
+      puts "#{r[key_index]} #{r.reject { |e| e == r[key_index] }.to_csv.chomp} #{q.reject \
+        { |e| e == r[key_index] }.to_csv.chomp}" unless r[key_index].nil? || q[key_index].nil?
       t = file2[k = j + 1]
       # Check for further records that match with r on the
       # join key.
       while k != file2.length && r[key_index] == t[key_index]
-        puts "#{r[key_index]} #{r.reject { |e| e == r[key_index] }.to_csv.chomp} #{t.reject { |e| e == r[key_index] }.to_csv.chomp}" unless r[key_index].nil? || t[key_index].nil?
+        puts "#{r[key_index]} #{r.reject { |e| e == r[key_index] }.to_csv.chomp} #{t.reject \
+          { |e| e == r[key_index] }.to_csv.chomp}" unless r[key_index].nil? || t[key_index].nil?
         t = file2[k += 1]
       end
       s = file1[l = i + 1]
       # Check for further records that match with q on the
       # join key.
       while l != file1.length && q[key_index] == s[key_index]
-        puts "#{q[key_index]} #{q.reject { |e| e == q[key_index] }.to_csv.chomp} #{s.reject { |e| e == q[key_index] }.to_csv.chomp}" unless q[key_index].nil? || s[key_index].nil?
+        puts "#{q[key_index]} #{q.reject { |e| e == q[key_index] }.to_csv.chomp} #{s.reject \
+          { |e| e == q[key_index] }.to_csv.chomp}" unless q[key_index].nil? || s[key_index].nil?
         s = file1[l += 1]
       end
       r = file1[i += 1]
