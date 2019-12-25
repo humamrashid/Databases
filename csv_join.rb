@@ -73,7 +73,9 @@ def exit_if_empty(file)
 end
 
 # hash_join() puts all records of the first CSV file into a hashtable and compares against hashes
-# of the join key for records in the second CSV file. Output is not sorted on join key.
+# of the join key for records in the second CSV file. Output is not sorted on join key. Hash joins
+# are faster than the other implementations but more memory intensive; not recommended on low-memory
+# systems.
 def hash_join(key_index, file1, file2)
   f1_htable = {}
   file1.each do |i|
@@ -105,7 +107,9 @@ def merge_sorter!(key_index, file1, file2)
 end
 
 # merge_join() assumes join key is 'comparable' and treats the key as a string unless it represents
-# a numeric type (int or float). Output is sorted on join key.
+# a numeric type (int or float). Output is sorted on join key. Merge joins are almost as fast as
+# hash joins while being much less memory-intensive; ideal choice for low-memory or unknown-capacity
+# systems.
 def merge_join(key_index, file1, file2)
   # Sorting part.
   merge_sorter!(key_index, file1, file2)
@@ -142,7 +146,8 @@ def merge_join(key_index, file1, file2)
 end
 
 # nested_join() works ok for number of records upto the tens of thousands. Output is not sorted on
-# join key.
+# join key. Nested loop joins are simple and straightforward, but also very computationally
+# intensive.
 def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
