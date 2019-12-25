@@ -156,7 +156,9 @@ end
 def nested_join(key_index, file1, file2)
   for i in file1
     for j in file2
-      puts "#{i[key_index]} #{i.reject { |e| e == i[key_index] }.to_csv.chomp} #{j.reject { |e| e == i[key_index] }.to_csv.chomp}" if (!i[key_index].nil? && !j[key_index].nil?) && (i[key_index] == j[key_index])
+      puts "#{i[key_index]} #{i.reject { |e| e == i[key_index] }.to_csv.chomp} #{j.reject \
+        { |e| e == i[key_index] }.to_csv.chomp}" if (!i[key_index].nil? && !j[key_index].nil?) && \
+        (i[key_index] == j[key_index])
     end
   end
 end
