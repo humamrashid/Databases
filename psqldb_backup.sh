@@ -4,6 +4,7 @@
 # psqldb_backup: a script for UNIX-like systems running bash to archive and
 # encrypt Postgresql database tables. Only works with psql and GnuPG. Further,
 # the script assumes GnuPG has been configured and a key pair already generated.
+# The files are backed up as CSV instead of any DBMS-specific format.
 
 # Works on one database at a time but any number of tables from the database can
 # be supplied as arguments. First 5 arguments to the script are database owner
