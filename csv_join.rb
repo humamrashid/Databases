@@ -8,8 +8,7 @@
 # but not in the matched records.
 #
 # CLI arguments:
-#   1.) < -h | -m | -n >, for join implementation type
-#   (hash, merge and nested-loop respectively).
+#   1.) < -h | -m | -n >, for join implementation type (hash, merge and nested-loop respectively).
 #
 #   2.) <key_index>, for index of key to join records on, (0 to number_of_fields - 1). Each key is
 #   assumed to be unique to a record in a table and each key is also assumed to be 'comparable' so
