@@ -201,7 +201,7 @@ create table location(
 create table modification(
     modid     bigint        not null,
     serialnum varchar(100)  not null,
-    original  varchar(500), not null,
+    original  varchar(500)  not null,
     current   varchar(500)  not null
 );
 --The 'modification' table catalogs parts that have been modified. This is used to
