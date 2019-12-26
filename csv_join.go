@@ -1,7 +1,7 @@
 /* csv_join.go:
  *
- * An implementation of the UNIX join utility for CSV files. Written in Go for
- * practice in the language.
+ * An implementation of the UNIX join utility for CSV files. Written in Go for practice in the
+ * language.
  */
 package main
 
