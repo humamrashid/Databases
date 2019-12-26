@@ -10,14 +10,17 @@ import (
 	"fmt"
 )
 
+// Hash join, quick, memory-intensive.
 func hash_join() {
 	return
 }
 
+// Merge join, almost as quick as hash join, not memory-intensive.
 func merge_join() {
 	return
 }
 
+// Nested-loop join, simple and straightforward, very slow on large datasets.
 func nested_join() {
 	return
 }
