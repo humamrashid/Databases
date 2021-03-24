@@ -1,3 +1,3 @@
 # Database Systems #
 
-## Items related to studying/working with database systems ##
+## Items related to studying or working with database systems ##
